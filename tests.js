@@ -4,7 +4,7 @@ var sys = require('util'),
 
 // get an API client
 var jamendo = new Jamendo({
-	client_id: '83039c0d'
+	client_id: '' # b6747d04 is a testing client_id, replace by yours
 });
 
 // track #245 - J.E.T. Apostrophe A.I.M.E by Both
