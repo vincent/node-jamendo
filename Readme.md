@@ -1,4 +1,10 @@
-# Simple Jamendo API v3 client
+# Jamendo API client
+```jamendo``` is a simple Jamendo API wrapper.
+
+It only makes HTTP requests with the well known [request](https://github.com/mikeal/request) module.
+
+All read methods, descibed at http://developer.jamendo.com/v3.0#readmethods-list are supported.
+
 
 # Install
 ```bash
