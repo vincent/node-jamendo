@@ -64,66 +64,711 @@
           </ul>
           <div class="scrollspy">
             <ul class="nav nav-list bs-docs-sidenav affix-top">
-              <li><a href="#request"><i class="alert alert-success"></i>request</a>
+              <li><a href="#Jamendo"><i class="alert alert-info"></i>Jamendo</a>
+              </li>
+              <li><a href="#clean_params"><i class="alert alert-info"></i>clean_params</a>
+              </li>
+              <li><a href="#request"><i class="alert alert-info"></i>request</a>
+              </li>
+              <li><a href="#albums"><i class="alert alert-info"></i>albums</a>
+              </li>
+              <li><a href="#artists"><i class="alert alert-info"></i>artists</a>
+              </li>
+              <li><a href="#tracks"><i class="alert alert-info"></i>tracks</a>
+              </li>
+              <li><a href="#album_tracks"><i class="alert alert-info"></i>album_tracks</a>
+              </li>
+              <li><a href="#artist_albums"><i class="alert alert-info"></i>artist_albums</a>
+              </li>
+              <li><a href="#artist_tracks"><i class="alert alert-info"></i>artist_tracks</a>
+              </li>
+              <li><a href="#concerts"><i class="alert alert-info"></i>concerts</a>
+              </li>
+              <li><a href="#playlists"><i class="alert alert-info"></i>playlists</a>
+              </li>
+              <li><a href="#playlists_tracks"><i class="alert alert-info"></i>playlists_tracks</a>
+              </li>
+              <li><a href="#reviews"><i class="alert alert-info"></i>reviews</a>
+              </li>
+              <li><a href="#reviews_albums"><i class="alert alert-info"></i>reviews_albums</a>
+              </li>
+              <li><a href="#users"><i class="alert alert-info"></i>users</a>
+              </li>
+              <li><a href="#users_artists"><i class="alert alert-info"></i>users_artists</a>
+              </li>
+              <li><a href="#users_albums"><i class="alert alert-info"></i>users_albums</a>
+              </li>
+              <li><a href="#users_tracks"><i class="alert alert-info"></i>users_tracks</a>
+              </li>
+              <li><a href="#users_favorites_artists"><i class="alert alert-info"></i>users_favorites_artists</a>
+              </li>
+              <li><a href="#users_favorites_albums"><i class="alert alert-info"></i>users_favorites_albums</a>
+              </li>
+              <li><a href="#users_favorites_tracks"><i class="alert alert-info"></i>users_favorites_tracks</a>
+              </li>
+              <li><a href="#autocomplete"><i class="alert alert-info"></i>autocomplete</a>
               </li>
             </ul>
           </div>
         </div>
         <div class="span9">
+          <section id="Jamendo">
+            <h1>Jamendo</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">function</div><span>Jamendo()</span> -> <span>object</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>settings</td>
+                <td>Object</td>
+                <td>A settings object with a client_id member</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Jamendo API client class<br />Use it with <br />var client = new Jamendo({ client_id: XXXXXX })</p> 
+            <pre><code class="language-javascript">var Jamendo = function(settings) {
+  if (!settings || !settings.client_id) {
+    throw 'You must provide a client_id setting';
+  }
+
+  this.base_url = 'http://api.jamendo.com/' + (settings.version ? settings.version : 'v3.0');
+  this.client_id = settings.client_id;
+};
+
+module.exports = Jamendo;</code></pre>
+          </div>
+          <section id="clean_params">
+            <h1>clean_params</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.clean_params()</span> -> <span>Object</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>path</td>
+                <td>String</td>
+                <td>The path parameters will be used against</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Clean a object parameters according to Jamendo policy<br /> - client_id is set if not specified<br /> - limit and offset are set if not specified<br /> - arrays are converted to space-separated strings</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.clean_params = function(path, object){
+  var string_params = [ 'id', 'artist_id', 'order' ];
+  var param, default_params = {
+    limit     : 10,
+    offest    : 0,
+    format    : 'json',
+    client_id : this.client_id, 
+  };
+
+  // arrays as strings
+  for (var i = 0; i < string_params.length; i++) {
+    param = string_params[i];
+    if (util.isArray(object[param])) {
+      object[param] = object[param].join(' ');
+    }
+  }
+
+  // explicit params
+  for (var name in default_params) {
+    if (typeof object[name] === 'undefined') {
+      object[name] = default_params[name];
+    }
+  }
+
+  return object;
+};</code></pre>
+          </div>
           <section id="request">
             <h1>request</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-success radius ctx-type">declaration</div><span>request</span>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.request()</span> -> <span>Request</span>
             </p>
           </section>
-          <div class="description"> 
-            <pre><code class="language-javascript">var request = require('request');
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>path</td>
+                <td>String</td>
+                <td>The path to the api endpoint</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Main request wrapper</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.request = function(path, parameters, callback) {
+  parameters = this.clean_params(path, parameters || {});
 
-
-var Jamendo = function(settings) {
-	if (!settings || !settings.client_id) {
-		throw 'You must provide a client_id setting';
-	}
-
-	this.base_url = 'http://api.jamendo.com/' + (settings.version ? settings.version : 'v3.0');
-	this.client_id = settings.client_id;
-};
-
-
-Jamendo.prototype.request = function(path, parameters, callback) {
-	parameters.client_id = this.client_id;
-
-	return request({
-		url: this.base_url + path,
-		method: 'GET',
-		qs: parameters,
-		json: true
-	}, function(error, response, body){
-		callback(error, body);
-	});
-};
-
-Jamendo.prototype.albums = function(parameters, callback) {
-	return this.request('/albums', parameters, callback);
-};
-Jamendo.prototype.artists = function(parameters, callback) {
-	return this.request('/artists', parameters, callback);
-};
-Jamendo.prototype.tracks = function(parameters, callback) {
-	return this.request('/tracks', parameters, callback);
-};
-Jamendo.prototype.album_tracks = function(parameters, callback) {
-	return this.request('/album/tracks', parameters, callback);
-};
-Jamendo.prototype.artist_albums = function(parameters, callback) {
-	return this.request('/artist/albums', parameters, callback);
-};
-Jamendo.prototype.artist_tracks = function(parameters, callback) {
-	return this.request('/artist/tracks', parameters, callback);
-};
-
-module.exports = Jamendo;</code></pre>
+  return request({
+    url: this.base_url + path,
+    method: 'GET',
+    qs: parameters,
+    json: true
+  }, function(error, response, body){
+    callback(error, body);
+  });
+};</code></pre>
+          </div>
+          <section id="albums">
+            <h1>albums</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.albums()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /albums endpoint</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.albums = function(parameters, callback) {
+  return this.request('/albums', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="artists">
+            <h1>artists</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.artists()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /artists endpoint</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.artists = function(parameters, callback) {
+  return this.request('/artists', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="tracks">
+            <h1>tracks</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.tracks()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /tracks endpoint</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.tracks = function(parameters, callback) {
+  return this.request('/tracks', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="album_tracks">
+            <h1>album_tracks</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.album_tracks()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /album/tracks endpoint</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.album_tracks = function(parameters, callback) {
+  return this.request('/album/tracks', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="artist_albums">
+            <h1>artist_albums</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.artist_albums()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /artist/albums endpoint</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.artist_albums = function(parameters, callback) {
+  return this.request('/artist/albums', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="artist_tracks">
+            <h1>artist_tracks</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.artist_tracks()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /artist/tracks endpoint</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.artist_tracks = function(parameters, callback) {
+  return this.request('/artist/tracks', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="concerts">
+            <h1>concerts</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.concerts()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /concerts endpoint</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.concerts = function(parameters, callback) {
+  return this.request('/concerts', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="playlists">
+            <h1>playlists</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.playlists()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /playlists endpoint</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.playlists = function(parameters, callback) {
+  return this.request('/playlists', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="playlists_tracks">
+            <h1>playlists_tracks</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.playlists_tracks()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /playlists/tracks endpoint</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.playlists_tracks = function(parameters, callback) {
+  return this.request('/playlists/tracks', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="reviews">
+            <h1>reviews</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.reviews()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /reviews endpoint</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.reviews = function(parameters, callback) {
+  return this.request('/reviews', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="reviews_albums">
+            <h1>reviews_albums</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.reviews_albums()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /reviews/albums endpoint</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.reviews_albums = function(parameters, callback) {
+  return this.request('/reviews/albums', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="users">
+            <h1>users</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.users()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /users endpoint</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.users = function(parameters, callback) {
+  return this.request('/users', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="users_artists">
+            <h1>users_artists</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.users_artists()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /users/artists endpoint</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.users_artists = function(parameters, callback) {
+  return this.request('/users/artists', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="users_albums">
+            <h1>users_albums</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.users_albums()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /users/albums endpoint</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.users_albums = function(parameters, callback) {
+  return this.request('/users/albums', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="users_tracks">
+            <h1>users_tracks</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.users_tracks()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /users/tracks endpoint</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.users_tracks = function(parameters, callback) {
+  return this.request('/users/tracks', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="users_favorites_artists">
+            <h1>users_favorites_artists</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.users_favorites_artists()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /users/artists endpoint, with an explicit 'fan' relation</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.users_favorites_artists = function(parameters, callback) {
+  parameters.relation = 'fan';
+  return this.request('/users/artists', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="users_favorites_albums">
+            <h1>users_favorites_albums</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.users_favorites_albums()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /users/albums endpoint, with an explicit 'fan' relation</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.users_favorites_albums = function(parameters, callback) {
+  parameters.relation = 'fan';
+  return this.request('/users/albums', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="users_favorites_tracks">
+            <h1>users_favorites_tracks</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.users_favorites_tracks()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /users/tracks endpoint, with an explicit 'fan' relation</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.users_favorites_tracks = function(parameters, callback) {
+  parameters.relation = 'fan';
+  return this.request('/users/tracks', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="autocomplete">
+            <h1>autocomplete</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.autocomplete()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /autocomplete endpoint</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.autocomplete = function(parameters, callback) {
+  return this.request('/autocomplete', parameters, callback);
+};</code></pre>
           </div>
         </div>
       </div>

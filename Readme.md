@@ -7,6 +7,8 @@ $ npm install jamendo
 
 # Use it
 ```javascript
+var jamendo = new Jamendo({ ... });
+
 jamendo.albums({ id: 33 }, function(error, data){
 	console.log(data.results[0]);
 });
@@ -22,7 +24,30 @@ jamendo.albums({ id: 33 }, function(error, data){
 }
 ```
 
+# Supported methods
+All read methods are supported, see http://developer.jamendo.com/v3.0#readmethods-list
+Write methods are currently not supported.
+
 # Run tests
 ```bash
 $ npm test
 ```
+
+# Run Grunt (JSlint/Docs)
+```bash
+$ grunt
+```
+
+# Constructor settings
+You can set the following options in the ```settings``` parameter
+```javascript
+var jamendo = new Jamendo({
+ client_id : no default    // Specify your client_id (see http://developer.jamendo.com/v3.0#obtain_client_id)
+ protocol  : 'http'        // HTTP protocol to use, http or https
+ version   : 'v3.0'        // Use the specified API version
+ debug     : false         // Print the whole response object and body in the console
+});
+```
+
+# Documentation
+Documentation is built by ```grunt``` and stored in the ```public/docs``` directory
