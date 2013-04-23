@@ -2,9 +2,7 @@
 
 # Install
 ```bash
-$ git clone git@github.com:vincent/node-jamendo.git
-$ cd jamendo-from-twitter
-$ npm install
+$ npm install jamendo
 ```
 
 # Use it
