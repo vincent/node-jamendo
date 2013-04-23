@@ -18,6 +18,8 @@ var Jamendo = function(settings) {
   this.protocol = settings.protocol || 'http';
   this.base_url = this.protocol + '://api.jamendo.com/' + (settings.version ? settings.version : 'v3.0');
   this.client_id = settings.client_id;
+
+  this.retry = settings.retry || false;
 };
 
 module.exports = Jamendo;
@@ -33,21 +35,12 @@ module.exports = Jamendo;
 * @return {Object} Cleaned object
 */
 Jamendo.prototype.clean_params = function(path, object){
-  var string_params = [ 'id', 'artist_id', 'order' ];
   var param, default_params = {
     limit     : 10,
     offset    : 0,
     format    : 'json',
     client_id : this.client_id, 
   };
-
-  // arrays as strings
-  for (var i = 0; i < string_params.length; i++) {
-    param = string_params[i];
-    if (util.isArray(object[param])) {
-      object[param] = object[param].join(' ');
-    }
-  }
 
   // explicit params
   for (var name in default_params) {
@@ -56,7 +49,43 @@ Jamendo.prototype.clean_params = function(path, object){
     }
   }
 
+  // datebetween params
+  if (object.datebetween && util.isArray(object.datebetween) 
+    && object.datebetween.length === 2) {
+    
+    for (var i = 0; i < 2; i++) {
+      // perfect
+      if (util.isDate(object.datebetween[i])) {
+
+      // a timestamp (milliseconds)
+      } else if (parseInt(object.datebetween[i])) {
+        object.datebetween[i] = new Date(object.datebetween[i]);
+      
+      // an IETF-compliant RFC 2822 timestamps string
+      } else {
+        object.datebetween[i] = new Date(object.datebetween[i]);
+      }
+    }
+
+    object.datebetween = this.format_date(object.datebetween[0]) + '_' + this.format_date(object.datebetween[1]);
+  }
+
+  // arrays as strings
+  for (var name in object) {
+    if (util.isArray(object[name])) {
+      object[name] = object[name].join(' ');
+    }
+  }
+
   return object;
+};
+
+/**
+* Format a Date according to API
+* @param {Date} date Date to format
+*/
+Jamendo.prototype.format_date = function(date) {
+  return date.getFullYear() + '-' + ('0' + date.getMonth()).slice(-2) + '-' + ('0' + (date.getDate() + 1)).slice(-2);
 };
 
 /**
@@ -72,17 +101,23 @@ Jamendo.prototype.request = function(path, parameters, callback) {
 
   var self = this;
 
-  return request({
+  var r = request({
     url: this.base_url + path,
     method: 'GET',
     qs: parameters,
     json: true
   }, function(error, response, body){
-    if (self.debug) {
-      console.log(error, response, body);
+    if (error && !response && self.retry) {
+      if (self.debug) {
+        console.log('network error, retry');
+      }
+      return self.request(path, parameters, callback);
     }
+
     callback(error, body);
   });
+
+  return r;
 };
 
 /**

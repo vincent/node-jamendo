@@ -4,7 +4,8 @@ var sys = require('util'),
 
 // get an API client
 var jamendo = new Jamendo({
-	debug: false,
+	debug: true,
+	retry: true,
 	protocole: 'https',
 	client_id: 'b6747d04' // b6747d04 is a testing client_id, replace by yours
 });
@@ -56,7 +57,7 @@ jamendo.users_favorites_artists({ id: 257235 }, function(error, data){
 
 });
 
-// test array parameters
+// test array params
 jamendo.artists({ id: [ 5, 888 ] }, function(error, data){
 
 	assert(typeof data.results !== 'undefined');
@@ -64,10 +65,20 @@ jamendo.artists({ id: [ 5, 888 ] }, function(error, data){
 
 });
 
-// test default parameters
+// test default params
 jamendo.artists({ }, function(error, data){
 
 	assert(typeof data.results !== 'undefined');
 	assert(data.results.length === 10);
 
 });
+
+// test datebetween params
+jamendo.tracks({ datebetween: [ 449921044 * 1000, '2011-10-10' ], limit: 10 }, function(error, data){
+
+	assert(typeof data.results !== 'undefined');
+	assert(data.results.length === 10);
+
+});
+
+
