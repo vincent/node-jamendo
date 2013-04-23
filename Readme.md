@@ -7,7 +7,6 @@ $ npm install jamendo
 
 # Use it
 ```javascript
-
 jamendo.albums({ id: 33 }, function(error, data){
 	console.log(data.results[0]);
 });
@@ -22,7 +21,6 @@ jamendo.albums({ id: 33 }, function(error, data){
   zip: 'http://storage-new.newjamendo.com/download/a33/mp32/'
 }
 ```
-
 
 # Run tests
 ```bash
