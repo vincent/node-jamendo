@@ -42,5 +42,32 @@ Jamendo.prototype.artist_albums = function(parameters, callback) {
 Jamendo.prototype.artist_tracks = function(parameters, callback) {
 	return this.request('/artist/tracks', parameters, callback);
 };
+Jamendo.prototype.concerts = function(parameters, callback) {
+	return this.request('/concerts', parameters, callback);
+};
+Jamendo.prototype.playlists = function(parameters, callback) {
+	return this.request('/playlists', parameters, callback);
+};
+Jamendo.prototype.playlists_tracks = function(parameters, callback) {
+	return this.request('/playlists/tracks', parameters, callback);
+};
+Jamendo.prototype.reviews = function(parameters, callback) {
+	return this.request('/reviews', parameters, callback);
+};
+Jamendo.prototype.reviews_albums = function(parameters, callback) {
+	return this.request('/reviews/albums', parameters, callback);
+};
+Jamendo.prototype.users = function(parameters, callback) {
+	return this.request('/users', parameters, callback);
+};
+Jamendo.prototype.users_artists = function(parameters, callback) {
+	return this.request('/users/artists', parameters, callback);
+};
+Jamendo.prototype.users_albums = function(parameters, callback) {
+	return this.request('/users/albums', parameters, callback);
+};
+Jamendo.prototype.users_tracks = function(parameters, callback) {
+	return this.request('/users/tracks', parameters, callback);
+};
 
 module.exports = Jamendo;

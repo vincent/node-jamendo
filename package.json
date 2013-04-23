@@ -1,16 +1,19 @@
 {
   "name": "jamendo",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A simple wrapper to Jamendo API v3",
   "main": "index.js",
   "scripts": {
     "test": "node tests.js"
   },
-  "repository": "",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/vincent/node-jamendo.git"
+  },
   "keywords": [
     "jamendo"
   ],
-  "author": "",
+  "author": "Vincent Lark vincent.lark@gmail.com",
   "license": "BSD",
   "dependencies": {
     "request": "~2.20.0"
@@ -21,5 +24,7 @@
     "grunt-contrib-jshint": "~0.4.3",
     "grunt-shell": "*",
     "grunt-contrib-copy": "~0.4.0"
-  }
+  },
+  "readmeFilename": "Readme.md",
+  "gitHead": "abe2a2e6a09763bd95d627bd2ade8a50a3ecb7df"
 }
