@@ -1,0 +1,25 @@
+{
+  "name": "jamendo",
+  "version": "0.0.0",
+  "description": "A simple wrapper to Jamendo API v3",
+  "main": "index.js",
+  "scripts": {
+    "test": "node tests.js"
+  },
+  "repository": "",
+  "keywords": [
+    "jamendo"
+  ],
+  "author": "",
+  "license": "BSD",
+  "dependencies": {
+    "request": "~2.20.0"
+  },
+  "devDependencies": {
+    "coffee-script": "*",
+    "grunt": ">= 0.4.0",
+    "grunt-contrib-jshint": "~0.4.3",
+    "grunt-shell": "*",
+    "grunt-contrib-copy": "~0.4.0"
+  }
+}
