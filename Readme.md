@@ -32,7 +32,8 @@ jamendo.albums({ id: 33 }, function(error, data){
 
 # Supported methods
 All read methods are supported, see http://developer.jamendo.com/v3.0#readmethods-list
-Write methods are currently not supported.
+
+All write methods are currently not supported.
 
 # Run tests
 ```bash
