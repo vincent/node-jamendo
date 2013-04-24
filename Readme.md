@@ -13,10 +13,12 @@ $ npm install jamendo
 
 # Use it
 ```javascript
+var Jamendo = require('jamendo');
+
 var jamendo = new Jamendo({ ... });
 
 jamendo.albums({ id: 33 }, function(error, data){
-	console.log(data.results[0]);
+    console.log(data.results[0]);
 });
 ```
 ```
