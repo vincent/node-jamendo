@@ -51,10 +51,10 @@ $ grunt
 You can set the following options in the ```settings``` parameter
 ```javascript
 var jamendo = new Jamendo({
- client_id : no default    // Specify your client_id
+ client_id : 'no default',    // Specify your client_id
                            // see http://developer.jamendo.com/v3.0#obtain_client_id
- protocol  : 'http'        // HTTP protocol to use, http or https
- version   : 'v3.0'        // Use the specified API version
+ protocol  : 'http',        // HTTP protocol to use, http or https
+ version   : 'v3.0',        // Use the specified API version
  debug     : false         // Print the whole response object and body in the console
 });
 ```
