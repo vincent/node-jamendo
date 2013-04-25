@@ -10,12 +10,14 @@ All *read methods* described at http://developer.jamendo.com/v3.0#readmethods-li
 $ npm install jamendo
 ```
 
-# Use it
+# Use
 ```javascript
+var Jamendo = require('jamendo');
+
 var jamendo = new Jamendo({ ... });
 
 jamendo.albums({ id: 33 }, function(error, data){
-	console.log(data.results[0]);
+    console.log(data.results[0]);
 });
 ```
 ```
@@ -71,16 +73,16 @@ $ grunt
 You can set following options in the ```settings``` parameter
 ```javascript
 var jamendo = new Jamendo({
-	client_id : no default    // Specify your client_id
-	                       // see http://developer.jamendo.com/v3.0#obtain_client_id
-	protocol  : 'http'        // HTTP protocol to use, http or https
-	version   : 'v3.0'        // Use the specified API version
+	client_id : 'no default',     // Specify your client_id
+	                             // see http://developer.jamendo.com/v3.0#obtain_client_id
+	protocol  : 'http',         // HTTP protocol to use, http or https
+	version   : 'v3.0',        // Use the specified API version
 	debug     : false         // Print the whole response object and body in the console
 });
 ```
 
 # Documentation
-Documentation is built by ```grunt``` and stored in the ```public/docs``` directory.
+API documentation is built by ```grunt``` and stored in the ```public/docs``` directory
 
 # License
 BSD
@@ -90,5 +92,4 @@ All comments, patchs and pull requests are welcome, but please ensure you ran ``
 
 # Background
 Maintainer @vincent (me duh!) was a Jamendo developper for about 4 years and still have relationships with Jamendo staff.
-
 
