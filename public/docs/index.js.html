@@ -300,44 +300,6 @@ module.exports = Jamendo;</code></pre>
   });
 
   return r;
-};
-
-
-Jamendo.prototype.authorize = function(parameters, callback) {
-  parameters = parameters || {};
-  var self = this;</code></pre>
-          </div>
-          <section>
-            <h1></h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-success radius ctx-type"></div>
-            </p>
-          </section>
-          <div class="description"><p>WORKFLOW<br />  => <a href='https://www.jamendo.com/en/login/oauth'>https://www.jamendo.com/en/login/oauth</a><br />  => <a href='https://api.jamendo.com/v3.0/oauth/authorize'>https://api.jamendo.com/v3.0/oauth/authorize</a><br />  => <a href='https://www.jamendo.com/en/login/oauthorizationform'>https://www.jamendo.com/en/login/oauthorizationform</a><br />  => <a href='http://api.jamendo.com/v3.0/oauth/submitoauthorizationform'>http://api.jamendo.com/v3.0/oauth/submitoauthorizationform</a></p>
-
-<p>=> get the redirect uri, it contains the AUTHORIZATION_CODE</p> 
-            <pre><code class="language-javascript">// send authorize request
-  var r = request({
-    url: this.base_url + '/oauth/authorize',
-    method: 'GET',
-    qs: {
-      client_id: this.client_id,
-      redirect_uri: 'http://localhost/test'
-    }
-  }, function(error, response, body){
-    if (error && !response && self.retry) {
-      if (self.debug) {
-        console.log('network error, retry');
-      }
-      return self.authorize();
-    }
-
-    // send the login url
-    callback(response.request.href);
-  });
-
-  return r;
 };</code></pre>
           </div>
           <section id="albums">

@@ -12,7 +12,7 @@ module.exports = function(grunt) {
     shell: {
       // Generate documentation
       makeDocs: {
-        command: 'rm -Rf public/docs/* && doxx --source . --ignore "public,static,views,templates,node_modules,grunt,config" --target public/docs'
+        command: 'rm -Rf public/docs/* && doxx --source . --ignore "public,static,views,templates,node_modules,grunt,config,sandbox" --target public/docs'
       }
     },
     jshint: {

@@ -161,7 +161,7 @@ jamendo.artists({ }, function(error, data){
 
 });
 
-// test datebetween params
+// test datebetween params, as strings and timestamps
 jamendo.tracks({ datebetween: [ 449921044 * 1000, '2011-10-10' ], limit: 10 }, function(error, data){
 
 	assert(typeof data.results !== 'undefined');
@@ -169,8 +169,13 @@ jamendo.tracks({ datebetween: [ 449921044 * 1000, '2011-10-10' ], limit: 10 }, f
 
 });
 
-// test authorize request
-jamendo.authorize('vincent__', 'debian!');</code></pre>
+// test datebetween params, as Date objects
+jamendo.tracks({ datebetween: [ new Date('1984-04-04'), new Date('2011-10-10') ], limit: 10 }, function(error, data){
+
+	assert(typeof data.results !== 'undefined');
+	assert(data.results.length === 10);
+
+});</code></pre>
           </div>
         </div>
       </div>
