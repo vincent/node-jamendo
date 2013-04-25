@@ -60,4 +60,4 @@ var jamendo = new Jamendo({
 ```
 
 # Documentation
-Documentation is built by ```grunt``` and stored in the ```public/docs``` directory
+API documentation is built by ```grunt``` and stored in the ```public/docs``` directory
