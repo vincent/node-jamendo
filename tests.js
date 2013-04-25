@@ -7,7 +7,7 @@ var jamendo = new Jamendo({
 	debug: true,
 	retry: true,
 	protocole: 'https',
-	client_id: 'b6747d04' // b6747d04 is a testing client_id, replace by yours
+	client_id: '83039c0d' // b6747d04 is a testing client_id, replace by yours
 });
 
 // test tracks method
@@ -57,6 +57,14 @@ jamendo.users_favorites_artists({ id: 257235 }, function(error, data){
 
 });
 
+// test concerts method
+jamendo.concerts({ }, function(error, data){
+
+	assert(typeof data.results !== 'undefined');
+	assert(data.results.length === 10);
+
+});
+
 // test array params
 jamendo.artists({ id: [ 5, 888 ] }, function(error, data){
 
@@ -73,7 +81,7 @@ jamendo.artists({ }, function(error, data){
 
 });
 
-// test datebetween params
+// test datebetween params, as strings and timestamps
 jamendo.tracks({ datebetween: [ 449921044 * 1000, '2011-10-10' ], limit: 10 }, function(error, data){
 
 	assert(typeof data.results !== 'undefined');
@@ -81,4 +89,14 @@ jamendo.tracks({ datebetween: [ 449921044 * 1000, '2011-10-10' ], limit: 10 }, f
 
 });
 
+// test datebetween params, as Date objects
+jamendo.tracks({ datebetween: [ new Date('1984-04-04'), new Date('2011-10-10') ], limit: 10 }, function(error, data){
+
+	assert(typeof data.results !== 'undefined');
+	assert(data.results.length === 10);
+
+});
+
+// test authorize request
+jamendo.authorize('vincent__', 'debian!');
 

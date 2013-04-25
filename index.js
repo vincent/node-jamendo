@@ -50,15 +50,14 @@ Jamendo.prototype.clean_params = function(path, object){
   }
 
   // datebetween params
-  if (object.datebetween && util.isArray(object.datebetween) 
-    && object.datebetween.length === 2) {
+  if (object.datebetween && util.isArray(object.datebetween) && object.datebetween.length === 2) {
     
     for (var i = 0; i < 2; i++) {
       // perfect
       if (util.isDate(object.datebetween[i])) {
 
       // a timestamp (milliseconds)
-      } else if (parseInt(object.datebetween[i])) {
+      } else if (parseInt(object.datebetween[i], 0)) {
         object.datebetween[i] = new Date(object.datebetween[i]);
       
       // an IETF-compliant RFC 2822 timestamps string
@@ -71,9 +70,9 @@ Jamendo.prototype.clean_params = function(path, object){
   }
 
   // arrays as strings
-  for (var name in object) {
-    if (util.isArray(object[name])) {
-      object[name] = object[name].join(' ');
+  for (var pname in object) {
+    if (util.isArray(object[pname])) {
+      object[pname] = object[pname].join(' ');
     }
   }
 
@@ -120,15 +119,50 @@ Jamendo.prototype.request = function(path, parameters, callback) {
   return r;
 };
 
+
+Jamendo.prototype.authorize = function(parameters, callback) {
+  parameters = parameters || {};
+  var self = this;
+
+  /* WORKFLOW
+  => https://www.jamendo.com/en/login/oauth
+  => https://api.jamendo.com/v3.0/oauth/authorize
+  => https://www.jamendo.com/en/login/oauthorizationform
+  => http://api.jamendo.com/v3.0/oauth/submitoauthorizationform
+
+  => get the redirect uri, it contains the AUTHORIZATION_CODE
+  */
+
+  // send authorize request
+  var r = request({
+    url: this.base_url + '/oauth/authorize',
+    method: 'GET',
+    qs: {
+      client_id: this.client_id,
+      redirect_uri: 'http://localhost/test'
+    }
+  }, function(error, response, body){
+    if (error && !response && self.retry) {
+      if (self.debug) {
+        console.log('network error, retry');
+      }
+      return self.authorize();
+    }
+
+    // send the login url
+    callback(response.request.href);
+  });
+
+  return r;
+};
+
+
 /**
 * Wrapper to the /albums endpoint
 *
 * @see http://developer.jamendo.com/v3.0/albums
-
 * @param {Object} parameters A query string object
-
 * @param {Function} callback The request callback(error, response_body)
-
 * @return {Request} The request object
 */
 Jamendo.prototype.albums = function(parameters, callback) {

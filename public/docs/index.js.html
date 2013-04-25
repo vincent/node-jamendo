@@ -68,6 +68,8 @@
               </li>
               <li><a href="#clean_params"><i class="alert alert-info"></i>clean_params</a>
               </li>
+              <li><a href="#format_date"><i class="alert alert-info"></i>format_date</a>
+              </li>
               <li><a href="#request"><i class="alert alert-info"></i>request</a>
               </li>
               <li><a href="#albums"><i class="alert alert-info"></i>albums</a>
@@ -91,6 +93,10 @@
               <li><a href="#reviews"><i class="alert alert-info"></i>reviews</a>
               </li>
               <li><a href="#reviews_albums"><i class="alert alert-info"></i>reviews_albums</a>
+              </li>
+              <li><a href="#radios"><i class="alert alert-info"></i>radios</a>
+              </li>
+              <li><a href="#radios_stream"><i class="alert alert-info"></i>radios_stream</a>
               </li>
               <li><a href="#users"><i class="alert alert-info"></i>users</a>
               </li>
@@ -141,8 +147,12 @@
     throw 'You must provide a client_id setting';
   }
 
-  this.base_url = 'http://api.jamendo.com/' + (settings.version ? settings.version : 'v3.0');
+  this.debug = settings.debug;
+  this.protocol = settings.protocol || 'http';
+  this.base_url = this.protocol + '://api.jamendo.com/' + (settings.version ? settings.version : 'v3.0');
   this.client_id = settings.client_id;
+
+  this.retry = settings.retry || false;
 };
 
 module.exports = Jamendo;</code></pre>
@@ -172,21 +182,12 @@ module.exports = Jamendo;</code></pre>
           </table>
           <div class="description"><p>Clean a object parameters according to Jamendo policy<br /> - client_id is set if not specified<br /> - limit and offset are set if not specified<br /> - arrays are converted to space-separated strings</p> 
             <pre><code class="language-javascript">Jamendo.prototype.clean_params = function(path, object){
-  var string_params = [ 'id', 'artist_id', 'order' ];
   var param, default_params = {
     limit     : 10,
-    offest    : 0,
+    offset    : 0,
     format    : 'json',
     client_id : this.client_id, 
   };
-
-  // arrays as strings
-  for (var i = 0; i < string_params.length; i++) {
-    param = string_params[i];
-    if (util.isArray(object[param])) {
-      object[param] = object[param].join(' ');
-    }
-  }
 
   // explicit params
   for (var name in default_params) {
@@ -195,7 +196,62 @@ module.exports = Jamendo;</code></pre>
     }
   }
 
+  // datebetween params
+  if (object.datebetween && util.isArray(object.datebetween) && object.datebetween.length === 2) {
+    
+    for (var i = 0; i < 2; i++) {
+      // perfect
+      if (util.isDate(object.datebetween[i])) {
+
+      // a timestamp (milliseconds)
+      } else if (parseInt(object.datebetween[i], 0)) {
+        object.datebetween[i] = new Date(object.datebetween[i]);
+      
+      // an IETF-compliant RFC 2822 timestamps string
+      } else {
+        object.datebetween[i] = new Date(object.datebetween[i]);
+      }
+    }
+
+    object.datebetween = this.format_date(object.datebetween[0]) + '_' + this.format_date(object.datebetween[1]);
+  }
+
+  // arrays as strings
+  for (var pname in object) {
+    if (util.isArray(object[pname])) {
+      object[pname] = object[pname].join(' ');
+    }
+  }
+
   return object;
+};</code></pre>
+          </div>
+          <section id="format_date">
+            <h1>format_date</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.format_date()</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>date</td>
+                <td>Date</td>
+                <td>Date to format</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Format a Date according to API</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.format_date = function(date) {
+  return date.getFullYear() + '-' + ('0' + date.getMonth()).slice(-2) + '-' + ('0' + (date.getDate() + 1)).slice(-2);
 };</code></pre>
           </div>
           <section id="request">
@@ -225,14 +281,63 @@ module.exports = Jamendo;</code></pre>
             <pre><code class="language-javascript">Jamendo.prototype.request = function(path, parameters, callback) {
   parameters = this.clean_params(path, parameters || {});
 
-  return request({
+  var self = this;
+
+  var r = request({
     url: this.base_url + path,
     method: 'GET',
     qs: parameters,
     json: true
   }, function(error, response, body){
+    if (error && !response && self.retry) {
+      if (self.debug) {
+        console.log('network error, retry');
+      }
+      return self.request(path, parameters, callback);
+    }
+
     callback(error, body);
   });
+
+  return r;
+};
+
+
+Jamendo.prototype.authorize = function(parameters, callback) {
+  parameters = parameters || {};
+  var self = this;</code></pre>
+          </div>
+          <section>
+            <h1></h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type"></div>
+            </p>
+          </section>
+          <div class="description"><p>WORKFLOW<br />  => <a href='https://www.jamendo.com/en/login/oauth'>https://www.jamendo.com/en/login/oauth</a><br />  => <a href='https://api.jamendo.com/v3.0/oauth/authorize'>https://api.jamendo.com/v3.0/oauth/authorize</a><br />  => <a href='https://www.jamendo.com/en/login/oauthorizationform'>https://www.jamendo.com/en/login/oauthorizationform</a><br />  => <a href='http://api.jamendo.com/v3.0/oauth/submitoauthorizationform'>http://api.jamendo.com/v3.0/oauth/submitoauthorizationform</a></p>
+
+<p>=> get the redirect uri, it contains the AUTHORIZATION_CODE</p> 
+            <pre><code class="language-javascript">// send authorize request
+  var r = request({
+    url: this.base_url + '/oauth/authorize',
+    method: 'GET',
+    qs: {
+      client_id: this.client_id,
+      redirect_uri: 'http://localhost/test'
+    }
+  }, function(error, response, body){
+    if (error && !response && self.retry) {
+      if (self.debug) {
+        console.log('network error, retry');
+      }
+      return self.authorize();
+    }
+
+    // send the login url
+    callback(response.request.href);
+  });
+
+  return r;
 };</code></pre>
           </div>
           <section id="albums">
@@ -541,6 +646,62 @@ module.exports = Jamendo;</code></pre>
           <div class="description"><p>Wrapper to the /reviews/albums endpoint</p> 
             <pre><code class="language-javascript">Jamendo.prototype.reviews_albums = function(parameters, callback) {
   return this.request('/reviews/albums', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="radios">
+            <h1>radios</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.radios()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /radios endpoint</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.radios = function(parameters, callback) {
+  return this.request('/radios', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="radios_stream">
+            <h1>radios_stream</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.radios_stream()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /radios/stream endpoint</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.radios_stream = function(parameters, callback) {
+  return this.request('/radios/stream', parameters, callback);
 };</code></pre>
           </div>
           <section id="users">

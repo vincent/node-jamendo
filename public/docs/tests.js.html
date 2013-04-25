@@ -84,14 +84,17 @@
 
 // get an API client
 var jamendo = new Jamendo({
-	client_id: 'b6747d04' // b6747d04 is a testing client_id, replace by yours
+	debug: true,
+	retry: true,
+	protocole: 'https',
+	client_id: '83039c0d' // b6747d04 is a testing client_id, replace by yours
 });
 
 // test tracks method
 jamendo.tracks({ id: 245 }, function(error, data){
 
 	assert(typeof data.results !== 'undefined');
-	assert(typeof data.results.length === 1);
+	assert(data.results.length === 1);
 
 	assert(data.results[0].id === '245');
 	assert(data.results[0].artist_id === '5');
@@ -105,7 +108,7 @@ jamendo.tracks({ id: 245 }, function(error, data){
 jamendo.albums({ id: 33 }, function(error, data){
 
 	assert(typeof data.results !== 'undefined');
-	assert(typeof data.results.length === 1);
+	assert(data.results.length === 1);
 
 	assert(data.results[0].id === '33');
 	assert(data.results[0].artist_id === '5');
@@ -118,24 +121,56 @@ jamendo.albums({ id: 33 }, function(error, data){
 jamendo.artists({ id: 5 }, function(error, data){
 
 	assert(typeof data.results !== 'undefined');
-	assert(typeof data.results.length === 1);
+	assert(data.results.length === 1);
 
 	assert(data.results[0].id === '5');
 	assert(data.results[0].name === 'Both');
 
 });
 
-// test array parameters
-jamendo.artists({ id: [ 5, 8 ] }, function(error, data){
-	assert(typeof data.results !== 'undefined');
-	assert(typeof data.results.length === 2);
+// test users_favorites_artists method
+jamendo.users_favorites_artists({ id: 257235 }, function(error, data){
+
+	assert(data.results !== 'undefined');
+	assert(data.results.length === 1);
+	assert(data.results[0].artists.length > 1);
+
 });
 
-// test default parameters
-jamendo.artists({ }, function(error, data){
+// test concerts method
+jamendo.concerts({ }, function(error, data){
+
 	assert(typeof data.results !== 'undefined');
-	assert(typeof data.results.length === 10);
-});</code></pre>
+	assert(data.results.length === 10);
+
+});
+
+// test array params
+jamendo.artists({ id: [ 5, 888 ] }, function(error, data){
+
+	assert(typeof data.results !== 'undefined');
+	assert(data.results.length === 2);
+
+});
+
+// test default params
+jamendo.artists({ }, function(error, data){
+
+	assert(typeof data.results !== 'undefined');
+	assert(data.results.length === 10);
+
+});
+
+// test datebetween params
+jamendo.tracks({ datebetween: [ 449921044 * 1000, '2011-10-10' ], limit: 10 }, function(error, data){
+
+	assert(typeof data.results !== 'undefined');
+	assert(data.results.length === 10);
+
+});
+
+// test authorize request
+jamendo.authorize('vincent__', 'debian!');</code></pre>
           </div>
         </div>
       </div>
