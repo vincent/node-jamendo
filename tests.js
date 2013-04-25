@@ -7,7 +7,7 @@ var jamendo = new Jamendo({
 	debug: true,
 	retry: true,
 	protocole: 'https',
-	client_id: '83039c0d' // b6747d04 is a testing client_id, replace by yours
+	client_id: 'b6747d04' // b6747d04 is a testing client_id, replace by yours
 });
 
 // test tracks method
