@@ -119,44 +119,6 @@ Jamendo.prototype.request = function(path, parameters, callback) {
   return r;
 };
 
-
-Jamendo.prototype.authorize = function(parameters, callback) {
-  parameters = parameters || {};
-  var self = this;
-
-  /* WORKFLOW
-  => https://www.jamendo.com/en/login/oauth
-  => https://api.jamendo.com/v3.0/oauth/authorize
-  => https://www.jamendo.com/en/login/oauthorizationform
-  => http://api.jamendo.com/v3.0/oauth/submitoauthorizationform
-
-  => get the redirect uri, it contains the AUTHORIZATION_CODE
-  */
-
-  // send authorize request
-  var r = request({
-    url: this.base_url + '/oauth/authorize',
-    method: 'GET',
-    qs: {
-      client_id: this.client_id,
-      redirect_uri: 'http://localhost/test'
-    }
-  }, function(error, response, body){
-    if (error && !response && self.retry) {
-      if (self.debug) {
-        console.log('network error, retry');
-      }
-      return self.authorize();
-    }
-
-    // send the login url
-    callback(response.request.href);
-  });
-
-  return r;
-};
-
-
 /**
 * Wrapper to the /albums endpoint
 *

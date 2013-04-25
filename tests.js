@@ -97,6 +97,4 @@ jamendo.tracks({ datebetween: [ new Date('1984-04-04'), new Date('2011-10-10') ]
 
 });
 
-// test authorize request
-jamendo.authorize('vincent__', 'debian!');
 
