@@ -11,7 +11,7 @@ All read methods, descibed at http://developer.jamendo.com/v3.0#readmethods-list
 $ npm install jamendo
 ```
 
-# Use it
+# Use
 ```javascript
 var Jamendo = require('jamendo');
 
