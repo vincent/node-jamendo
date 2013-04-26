@@ -98,6 +98,11 @@ jamendo.artists({ offset: 0, limit: 10, format: 'json' }, ...
 $ npm test
 ```
 
+Write methods will be tested if you set a valid authorization code in the ```AUTHORIZATION_CODE``` environement variable.
+```bash
+$ AUTHORIZATION_CODE=1234567890987654321 npm test
+```
+
 # Run Grunt (jslint, docs)
 ```bash
 $ grunt
