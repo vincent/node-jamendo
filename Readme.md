@@ -59,12 +59,12 @@ jamendo.grant({ code: 'mysupergreatauthcode' }, function(error, oauth_data){
 
 Once you have these oauth details, you can use write methods.
 ```javascript
-  jamendo.setuser_fan({
-    access_token: 'c2839ba71a1e457e51e9c0d0f12345723e92b1865',
-    artist_id: 5
-  }, function(error, error_message, warnings){
-    // you are now a fan of the artist Both
-  });
+jamendo.setuser_fan({
+  access_token: 'c2839ba71a1e457e51e9c0d0f12345723e92b1865',
+  artist_id: 5
+}, function(error, error_message, warnings){
+  // you are now a fan of the artist Both
+});
 ```
 
 # Syntax sugar
