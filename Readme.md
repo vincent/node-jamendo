@@ -1,9 +1,9 @@
 # Jamendo API client
-```jamendo``` is a simple Jamendo API wrapper.
+```jamendo``` is a simple Jamendo API javascript wrapper.
 
 It only makes HTTP requests with the well known [request](https://github.com/mikeal/request) module.
 
-All methods described at http://developer.jamendo.com/v3.0#readmethods-list and http://developer.jamendo.com/v3.0#writemethods-list are supported.
+All methods described at http://developer.jamendo.com/v3.0 are supported.
 
 # Install
 ```bash
@@ -41,6 +41,7 @@ jamendo.tracks_file({ id: 245 }).pipe(fs.createWriteStream('Both - J.E.T. Apostr
 All read methods are supported, see http://developer.jamendo.com/v3.0#readmethods-list
 
 Write methods are supported, but this library WILL NOT HANDLE OAUTH2 for you.
+
 You have to handle oAuth2 workflows by yourself.
 
 That said, some methods can help:
