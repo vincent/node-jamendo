@@ -18,6 +18,9 @@ var Jamendo = function(settings) {
   this.protocol = settings.protocol || 'http';
   this.base_url = this.protocol + '://api.jamendo.com/' + (settings.version ? settings.version : 'v3.0');
   this.client_id = settings.client_id;
+  this.client_secret = settings.client_secret;
+  this.rejectUnauthorized = settings.rejectUnauthorized || false;
+
 
   this.retry = settings.retry || false;
 };
@@ -35,12 +38,15 @@ module.exports = Jamendo;
 * @return {Object} Cleaned object
 */
 Jamendo.prototype.clean_params = function(path, object){
-  var param, default_params = {
-    limit     : 10,
-    offset    : 0,
-    format    : 'json',
-    client_id : this.client_id, 
-  };
+  var param,
+      default_params = {
+        limit     : 10,
+        offset    : 0,
+        format    : 'json',
+        client_id : this.client_id, 
+      };
+
+  object = object || {};
 
   // explicit params
   for (var name in default_params) {
@@ -103,12 +109,14 @@ Jamendo.prototype.request = function(path, parameters, callback) {
   var r = request({
     url: this.base_url + path,
     method: 'GET',
+    rejectUnauthorized: this.rejectUnauthorized,
     qs: parameters,
     json: true
   }, function(error, response, body){
+
     if (error && !response && self.retry) {
       if (self.debug) {
-        console.log('network error, retry');
+        console.log('network error, retry', error);
       }
       return self.request(path, parameters, callback);
     }
@@ -118,6 +126,52 @@ Jamendo.prototype.request = function(path, parameters, callback) {
 
   return r;
 };
+
+/**
+* Main write request wrapper
+*
+* @param {String} path The path to the api endpoint
+* @param {Object} parameters A query string object, must contain an access_token member
+* @param {Function} callback The request callback(error, error_message, warnings)
+* @return {Request} The request object
+*/
+Jamendo.prototype.write_request = function(path, parameters, callback) {
+  parameters = parameters || {};
+
+  var self = this;
+
+  var r = request({
+    url: this.base_url + path,
+    method: 'POST',
+    rejectUnauthorized: this.rejectUnauthorized,
+    form: parameters,
+    json: true
+  }, function(error, response, body){
+    if (error && !response && self.retry) {
+      if (self.debug) {
+        console.log('network error, retry', error);
+      }
+      return self.write_request(path, parameters, callback);
+    }
+
+    // http error
+    if (error || !response) {
+      callback(error, 'network error', null);
+
+    // api error
+    } else if (parseInt(response.headers.status, 0) !== 0) {
+      callback(response.headers.code, response.headers.error_message, response.headers.warnings);
+
+    // api success ! /me eyebrow
+    } else {
+      callback(response.headers.code, response.headers.error_message, response.headers.warnings);
+
+    }
+  });
+
+  return r;
+};
+
 
 /**
 * Wrapper to the /albums endpoint
@@ -375,3 +429,151 @@ Jamendo.prototype.autocomplete = function(parameters, callback) {
 };
 
 
+/********************************************/
+
+
+/**
+* Wrapper to the /setuser/fan endpoint
+*
+* Use this method to let the user identified by 'userid' become a fan of the artist identified 'artistid' (/users/artists?relation='fan').
+* Note that if the artist doesn't exist, no error will be raised, but the track will not appear in any read request of api and website.
+*
+* @see http://developer.jamendo.com/v3.0/setuser/fan
+* @param {Object} parameters A query string object ( access_token, artist_id are required )
+* @param {Function} callback The request callback(error, error_message, warnings)
+* @return {Request} The request object
+*/
+Jamendo.prototype.setuser_fan = function(parameters, callback) {
+  return this.write_request('/setuser/fan', parameters, callback);
+};
+
+/**
+* Wrapper to the /setuser/favorite endpoint
+*
+* Use this method to add a given track to the user's preferites (/users/tracks?relation='preferite') (also called 'Favorites' playlist in Jamendo.com).
+* Note that if the track doesn't exist, no error will be raised, but the track will not appear in any read request of api and website.
+*
+* @see http://developer.jamendo.com/v3.0/setuser/favorite
+* @param {Object} parameters A query string object ( access_token, track_id are required )
+* @param {Function} callback The request callback(error, error_message, warnings)
+* @return {Request} The request object
+*/
+Jamendo.prototype.setuser_favorite = function(parameters, callback) {
+  return this.write_request('/setuser/favorite', parameters, callback);
+};
+
+/**
+* Wrapper to the /setuser/like endpoint
+*
+* Let this 'userid' like the given 'trackid' (/users/tracks?relation='like').
+* Note that if the track doesn't exist, no error will be raised, but the track will not appear in any read request of api and website.
+*
+* @see http://developer.jamendo.com/v3.0/setuser/like
+* @param {Object} parameters A query string object ( access_token, track_id are required )
+* @param {Function} callback The request callback(error, error_message, warnings)
+* @return {Request} The request object
+*/
+Jamendo.prototype.setuser_like = function(parameters, callback) {
+  return this.write_request('/setuser/like', parameters, callback);
+};
+
+/**
+* Wrapper to the /setuser/dislike endpoint
+*
+* As youtube and many other social web site, on Jamendo is possible to 'like' a track, but also to 'dislike' a track.
+* This method allow you to such an action.
+*
+* @see http://developer.jamendo.com/v3.0/setuser/dislike
+* @param {Object} parameters A query string object ( access_token, track_id are required )
+* @param {Function} callback The request callback(error, error_message, warnings)
+* @return {Request} The request object
+*/
+Jamendo.prototype.setuser_dislike = function(parameters, callback) {
+  return this.write_request('/setuser/dislike', parameters, callback);
+};
+
+
+/******************************************/
+
+/**
+* Authorize request wrapper
+*
+* The objective of such a request is to ask the user if he agrees to grant some rights to your application.
+*
+* @param {Object} parameters A query string object
+* @param {Function} callback The request callback(error, login_url)
+* @return {Request} The request object
+*/
+Jamendo.prototype.authorize = function(parameters, callback) {
+  parameters = parameters || {};
+  parameters.client_id = this.client_id;
+
+  var self = this;
+
+  // send authorize request
+  var r = request({
+    url: this.base_url + '/oauth/authorize',
+    method: 'GET',
+    rejectUnauthorized: this.rejectUnauthorized,
+    qs: parameters
+  }, function(error, response, body){
+    if (error && !response && self.retry) {
+      if (self.debug) {
+        console.log('network error, retry', error);
+      }
+      return self.authorize(parameters, callback);
+    }
+
+    // forward the login url
+    callback(null, response.request.href);
+  });
+
+  return r;
+};
+
+/**
+* Grant request wrapper
+*
+* The main objective of the OAuth2 Grant request is to exchange the authorization code you have received with the OAuth2 Authorize request to get an 'access token'.
+*
+* @param {Object} parameters A query string object (code is required)
+* @param {Function} callback The request callback(error, login_url)
+* @return {Request} The request object
+*/
+Jamendo.prototype.grant = function(parameters, callback) {
+  parameters = parameters || {};
+  parameters.client_id = this.client_id;
+  parameters.client_secret = this.client_secret;
+  parameters.grant_type = 'authorization_code';
+
+  if (!parameters.client_secret) {
+    return callback('You must provide a client_secret to the constructor', null);
+  }
+
+  if (!parameters.code) {
+    return callback('You must provide a code in parameters', null);
+  }
+
+  var self = this;
+  
+  // send authorize request
+  var r = request({
+    url: this.base_url + '/oauth/grant',
+    method: 'POST',
+    rejectUnauthorized: this.rejectUnauthorized,
+    form: parameters,
+    json: true
+  }, function(error, response, body){
+    if (error && !response && self.retry) {
+      if (self.debug) {
+        console.log('network error, retry', error);
+      }
+      return self.grant(parameters, callback);
+    }
+
+    // forward oauth detail
+    callback(null, body);
+  });
+
+  return r;
+};

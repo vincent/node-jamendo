@@ -3,7 +3,7 @@
 
 It only makes HTTP requests with the well known [request](https://github.com/mikeal/request) module.
 
-All *read methods* described at http://developer.jamendo.com/v3.0#readmethods-list are supported.
+All methods described at http://developer.jamendo.com/v3.0#readmethods-list and http://developer.jamendo.com/v3.0#writemethods-list are supported.
 
 # Install
 ```bash
@@ -31,10 +31,37 @@ jamendo.albums({ id: 33 }, function(error, data){
 }
 ```
 
-# Supported methods
+# Supported methods and workflows
 All read methods are supported, see http://developer.jamendo.com/v3.0#readmethods-list
 
-All write methods are currently not supported.
+Write methods are supported, but this library WILL NOT HANDLE OAUTH2 for you.
+You have to handle oAuth2 workflows by yourself.
+
+That said, some methods can help:
+```javascript
+jamendo.authorize({}, function(error, login_url){
+  // redirect yourself the user to login_url ...
+  // once your application is accepted, he will be redirected with an authorization_code !valid for 30 seconds!
+});
+
+jamendo.grant({ code: 'mysupergreatauthcode' }, function(error, oauth_data){
+  /* oauth_data == {
+    access_token: 'c2839ba71a1e457e51e9c0d0f12345723e92b1865',
+    refresh_token: '46f3fbc0e3fe7627503e3b12345c1e36ca92388b',
+    expires_in: 7200,
+    token_type: 'bearer',
+    scope: 'music'
+  }
+  */
+});
+```
+
+Once you have these oauth details, you can use write methods.
+```javascript
+  jamendo.setuser_fan({ access_token: access_token, artist_id: 5 }, function(error, error_message, warnings){
+    // you are now a fan of the artist Both
+  });
+```
 
 # Syntax sugar
 Jamendo API uses specific formats for some parameters. This wrapper library will take care of formatting for you.
@@ -80,7 +107,11 @@ var jamendo = new Jamendo({
 	                             // see http://developer.jamendo.com/v3.0#obtain_client_id
 	protocol  : 'http',         // HTTP protocol to use, http or https
 	version   : 'v3.0',        // Use the specified API version
+
 	debug     : false         // Print the whole response object and body in the console
+
+  rejectUnauthorized:     // Ignore SSL certificates issues
+                         //  see TLS options at http://nodejs.org/docs/v0.7.8/api/https.html#https_https_request_options_callback
 });
 ```
 

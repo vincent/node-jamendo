@@ -175,6 +175,15 @@ jamendo.tracks({ datebetween: [ new Date('1984-04-04'), new Date('2011-10-10') ]
 	assert(typeof data.results !== 'undefined');
 	assert(data.results.length === 10);
 
+});
+
+// test authorize 
+jamendo.authorize({ }, function(error, login_url){
+
+	assert(typeof login_url !== 'undefined');
+
+	console.log('Open your browser at', login_url, 'log you in, accept app, and get the auth code');
+
 });</code></pre>
           </div>
         </div>

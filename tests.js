@@ -1,13 +1,28 @@
-var sys = require('util'),
+var util = require('util'),
+	fs = require('fs'),
+	sys = require('util'),
 	Jamendo = require('./index.js'),
 	assert = require('assert');
+
+function load_or(filename, defaults) {
+	try { return require(filename); } catch (e) { return defaults; }
+}
+
+// try to load my own credentials
+var client_id = load_or('./.client_id.js', 'b6747d04');
+var client_secret = load_or('./.client_secret.js', null);
+
+console.log('using API client_id:', client_id);
+console.log('using API client_secret:', client_secret);
 
 // get an API client
 var jamendo = new Jamendo({
 	debug: true,
 	retry: true,
-	protocole: 'https',
-	client_id: 'b6747d04' // b6747d04 is a testing client_id, replace by yours
+	protocol: 'https',
+	client_id: client_id,
+	client_secret: client_secret,
+	rejectUnauthorized: false
 });
 
 // test tracks method
@@ -97,4 +112,57 @@ jamendo.tracks({ datebetween: [ new Date('1984-04-04'), new Date('2011-10-10') ]
 
 });
 
+// test authorize 
+var test_redirect_uri = 'http://localhost/DAT_CODE';
+jamendo.authorize({ redirect_uri: test_redirect_uri }, function(error, login_url){
+
+	assert(typeof login_url !== 'undefined');
+
+	var authorization_code = process.env.AUTHORIZATION_CODE;
+
+	// dont have any AUTHORIZATION_CODE to play with ,*__*
+	if (!authorization_code) {
+		console.log('Open your browser at', login_url, '. Log you in, accept app, and get the auth code');
+		console.log('then, in max 30 seconds from now, run me with that string in the AUTHORIZATION_CODE environement variable, like');
+		console.log('$> AUTHORIZATION_CODE=mybrandnewauthcode  npm test');
+		console.log('');
+
+	// much better !
+	} else {
+
+		// get granted 
+		jamendo.grant({ redirect_uri: test_redirect_uri, code: authorization_code }, function(error, oauth_data){
+
+			assert(typeof oauth_data !== 'undefined', 'Cannot get oauth data, verify your credentials');
+
+  		var refresh_token = oauth_data.refresh_token;
+			var access_token = oauth_data.access_token;
+  		var expires_in = oauth_data.expires_in;
+  		var token_type = oauth_data.token_type;
+  		var scope = oauth_data.scope;
+
+  		// test setuser_fan
+  		jamendo.setuser_fan({ access_token: access_token, artist_id: 5 }, function(error, error_message, warnings){
+  			assert.ok(!error, 'Cannot get be fan of artist Both: ' + error_message);
+  		});
+
+  		// test setuser_favorite
+  		jamendo.setuser_favorite({ access_token: access_token, track_id: 245 }, function(error, error_message, warnings){
+  			assert.ok(!error, 'Cannot get be fan of track: ' + error_message);
+  		});
+
+  		// test setuser_like
+  		jamendo.setuser_like({ access_token: access_token, track_id: 245 }, function(error, error_message, warnings){
+  			assert.ok(!error, 'Cannot like track: ' + error_message);
+  		});
+
+  		// test setuser_dislike
+  		jamendo.setuser_dislike({ access_token: access_token, track_id: 245 }, function(error, error_message, warnings){
+  			assert.ok(!error, 'Cannot dislike track', error_message);
+  		});
+
+		});
+
+	}
+});
 

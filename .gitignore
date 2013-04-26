@@ -1,2 +1,4 @@
 node_modules
 sandbox.js
+.client_id.js
+.client_secret.js

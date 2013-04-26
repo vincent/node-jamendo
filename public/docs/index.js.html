@@ -72,6 +72,8 @@
               </li>
               <li><a href="#request"><i class="alert alert-info"></i>request</a>
               </li>
+              <li><a href="#write_request"><i class="alert alert-info"></i>write_request</a>
+              </li>
               <li><a href="#albums"><i class="alert alert-info"></i>albums</a>
               </li>
               <li><a href="#artists"><i class="alert alert-info"></i>artists</a>
@@ -113,6 +115,16 @@
               <li><a href="#users_favorites_tracks"><i class="alert alert-info"></i>users_favorites_tracks</a>
               </li>
               <li><a href="#autocomplete"><i class="alert alert-info"></i>autocomplete</a>
+              </li>
+              <li><a href="#setuser_fan"><i class="alert alert-info"></i>setuser_fan</a>
+              </li>
+              <li><a href="#setuser_favorite"><i class="alert alert-info"></i>setuser_favorite</a>
+              </li>
+              <li><a href="#setuser_like"><i class="alert alert-info"></i>setuser_like</a>
+              </li>
+              <li><a href="#setuser_dislike"><i class="alert alert-info"></i>setuser_dislike</a>
+              </li>
+              <li><a href="#authorize"><i class="alert alert-info"></i>authorize</a>
               </li>
             </ul>
           </div>
@@ -182,12 +194,15 @@ module.exports = Jamendo;</code></pre>
           </table>
           <div class="description"><p>Clean a object parameters according to Jamendo policy<br /> - client_id is set if not specified<br /> - limit and offset are set if not specified<br /> - arrays are converted to space-separated strings</p> 
             <pre><code class="language-javascript">Jamendo.prototype.clean_params = function(path, object){
-  var param, default_params = {
-    limit     : 10,
-    offset    : 0,
-    format    : 'json',
-    client_id : this.client_id, 
-  };
+  var param,
+      default_params = {
+        limit     : 10,
+        offset    : 0,
+        format    : 'json',
+        client_id : this.client_id, 
+      };
+
+  object = object || {};
 
   // explicit params
   for (var name in default_params) {
@@ -294,6 +309,68 @@ module.exports = Jamendo;</code></pre>
         console.log('network error, retry');
       }
       return self.request(path, parameters, callback);
+    }
+
+    callback(error, body);
+  });
+
+  return r;
+};</code></pre>
+          </div>
+          <section id="write_request">
+            <h1>write_request</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.write_request()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>path</td>
+                <td>String</td>
+                <td>The path to the api endpoint</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Main write request wrapper</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.write_request = function(path, parameters, callback) {
+  parameters = parameters || {};
+
+  var self = this;
+
+  var r = request({
+    url: this.base_url + path,
+    method: 'POST',
+    form: parameters,
+    json: true
+  }, function(error, response, body){
+    if (error && !response && self.retry) {
+      if (self.debug) {
+        console.log('network error, retry');
+      }
+      return self.write_request(path, parameters, callback);
+    }
+
+    // http error
+    if (error || !response) {
+      callback(error, 'network error', null);
+
+    // api error
+    } else if (parseInt(response.headers.status, 0) !== 0) {
+      callback(response.headers.code, response.headers.error_message, response.headers.warnings);
+
+    // api success ! /me eyebrow
+    } else {
+      callback(response.headers.code, response.headers.error_message, response.headers.warnings);
+
     }
 
     callback(error, body);
@@ -891,6 +968,180 @@ module.exports = Jamendo;</code></pre>
           <div class="description"><p>Wrapper to the /autocomplete endpoint</p> 
             <pre><code class="language-javascript">Jamendo.prototype.autocomplete = function(parameters, callback) {
   return this.request('/autocomplete', parameters, callback);
+};</code></pre>
+          </div>
+          <section>
+            <h1></h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type"></div>
+            </p>
+          </section>
+          <div class="description"><hr /> 
+            <pre><code class="language-javascript"></code></pre>
+          </div>
+          <section id="setuser_fan">
+            <h1>setuser_fan</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.setuser_fan()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object ( access_token, track_id are required )</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /setuser/fan endpoint</p>
+
+<p>Use this method to let the user identified by 'userid' become a fan of the artist identified 'artistid' (/users/artists?relation='fan').<br />Note that if the artist doesn't exist, no error will be raised, but the track will not appear in any read request of api and website.</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.setuser_fan = function(parameters, callback) {
+  return this.write_request('/setuser/fan', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="setuser_favorite">
+            <h1>setuser_favorite</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.setuser_favorite()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object ( access_token, track_id are required )</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /setuser/favorite endpoint</p>
+
+<p>Use this method to add a given track to the user's preferites (/users/tracks?relation='preferite') (also called 'Favorites' playlist in Jamendo.com).<br />Note that if the track doesn't exist, no error will be raised, but the track will not appear in any read request of api and website.</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.setuser_favorite = function(parameters, callback) {
+  return this.write_request('/setuser/favorite', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="setuser_like">
+            <h1>setuser_like</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.setuser_like()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object ( access_token, track_id are required )</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /setuser/like endpoint</p>
+
+<p>Let this 'userid' like the given 'trackid' (/users/tracks?relation='like').<br />Note that if the track doesn't exist, no error will be raised, but the track will not appear in any read request of api and website.</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.setuser_like = function(parameters, callback) {
+  return this.write_request('/setuser/like', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="setuser_dislike">
+            <h1>setuser_dislike</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.setuser_dislike()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object ( access_token, track_id are required )</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Wrapper to the /setuser/dislike endpoint</p>
+
+<p>As youtube and many other social web site, on Jamendo is possible to 'like' a track, but also to 'dislike' a track.<br />This method allow you to such an action.</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.setuser_dislike = function(parameters, callback) {
+  return this.write_request('/setuser/dislike', parameters, callback);
+};</code></pre>
+          </div>
+          <section id="authorize">
+            <h1>authorize</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.authorize()</span>
+            </p>
+          </section>
+          <div class="description"><hr /> 
+            <pre><code class="language-javascript">Jamendo.prototype.authorize = function(parameters, callback) {
+  parameters = parameters || {};
+  parameters.client_id = this.client_id;
+
+  var self = this;</code></pre>
+          </div>
+          <section>
+            <h1></h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type"></div>
+            </p>
+          </section>
+          <div class="description"><p>WORKFLOW<br />  => <a href='https://www.jamendo.com/en/login/oauth'>https://www.jamendo.com/en/login/oauth</a><br />  => <a href='https://api.jamendo.com/v3.0/oauth/authorize'>https://api.jamendo.com/v3.0/oauth/authorize</a><br />  => <a href='https://www.jamendo.com/en/login/oauthorizationform'>https://www.jamendo.com/en/login/oauthorizationform</a><br />  => <a href='http://api.jamendo.com/v3.0/oauth/submitoauthorizationform'>http://api.jamendo.com/v3.0/oauth/submitoauthorizationform</a></p>
+
+<p>=> get the redirect uri, it contains the AUTHORIZATION_CODE</p> 
+            <pre><code class="language-javascript">// send authorize request
+  var r = request({
+    url: this.base_url + '/oauth/authorize',
+    method: 'GET',
+    qs: parameters
+  }, function(error, response, body){
+    if (error && !response && self.retry) {
+      if (self.debug) {
+        console.log('network error, retry');
+      }
+      return self.authorize();
+    }
+
+    // send the login url
+    callback(null, response.request.href);
+  });
+
+  return r;
 };</code></pre>
           </div>
         </div>

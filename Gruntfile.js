@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 module.exports = function(grunt) {
 
   // Project configuration.
@@ -35,12 +37,13 @@ module.exports = function(grunt) {
         jQuery: true
       },
       uses_defaults: [ '*.js', 'lib/**/*.js', 'test/**/*.js' ]
-    } 
+    }
   });
 
   // Load plugins
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-text-replace');
   grunt.loadNpmTasks('grunt-shell');
 
   grunt.registerTask('default', ['jshint', 'shell:makeDocs']);
