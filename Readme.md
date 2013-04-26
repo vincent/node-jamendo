@@ -41,7 +41,8 @@ That said, some methods can help:
 ```javascript
 jamendo.authorize({}, function(error, login_url){
   // redirect yourself the user to login_url ...
-  // once your application is accepted, he will be redirected with an authorization_code !valid for 30 seconds!
+  // once your application is accepted, he will be redirected 
+  // with an authorization_code, valid for 30 seconds
 });
 
 jamendo.grant({ code: 'mysupergreatauthcode' }, function(error, oauth_data){
@@ -58,7 +59,10 @@ jamendo.grant({ code: 'mysupergreatauthcode' }, function(error, oauth_data){
 
 Once you have these oauth details, you can use write methods.
 ```javascript
-  jamendo.setuser_fan({ access_token: access_token, artist_id: 5 }, function(error, error_message, warnings){
+  jamendo.setuser_fan({
+    access_token: access_token,
+    artist_id: 5
+  }, function(error, error_message, warnings){
     // you are now a fan of the artist Both
   });
 ```
@@ -111,7 +115,7 @@ var jamendo = new Jamendo({
 	debug     : false         // Print the whole response object and body in the console
 
   rejectUnauthorized:     // Ignore SSL certificates issues
-                         //  see TLS options at http://nodejs.org/docs/v0.7.8/api/https.html#https_https_request_options_callback
+                         // see http://nodejs.org/docs/v0.7.8/api/https.html#https_https_request_options_callback
 });
 ```
 
