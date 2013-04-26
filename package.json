@@ -1,6 +1,6 @@
 {
   "name": "jamendo",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A simple wrapper to Jamendo API v3",
   "main": "index.js",
   "scripts": {
@@ -22,8 +22,7 @@
     "coffee-script": "*",
     "grunt": ">= 0.4.0",
     "grunt-contrib-jshint": "~0.4.3",
-    "grunt-shell": "~0.2.2",
-    "grunt-contrib-copy": "~0.4.0"
+    "grunt-shell": "~0.2.2"
   },
   "readmeFilename": "Readme.md",
   "gitHead": "abe2a2e6a09763bd95d627bd2ade8a50a3ecb7df"
