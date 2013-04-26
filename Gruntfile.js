@@ -14,7 +14,7 @@ module.exports = function(grunt) {
     shell: {
       // Generate documentation
       makeDocs: {
-        command: 'rm -Rf public/docs/* && doxx --source . --ignore "public,static,views,templates,node_modules,grunt,config,sandbox" --target public/docs'
+        command: 'rm -Rf public/docs/* && doxx --source . --ignore "public,static,views,templates,node_modules,grunt,config,sandbox,.client" --target public/docs'
       }
     },
     jshint: {
