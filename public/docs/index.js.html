@@ -58,6 +58,8 @@
         <div class="span3 bs-docs-sidebar">
           <ul class="nav nav-list bs-docs-sidenav affix-top">
             <li class=""><a href="index.html">Main</a></li>
+            <li class=""><a href=".client_id.js.html">.client_id.js</a></li>
+            <li class=""><a href=".client_secret.js.html">.client_secret.js</a></li>
             <li class=""><a href="Gruntfile.js.html">Gruntfile.js</a></li>
             <li class="active"><a href="index.js.html">index.js</a></li>
             <li class=""><a href="tests.js.html">tests.js</a></li>
@@ -126,6 +128,8 @@
               </li>
               <li><a href="#authorize"><i class="alert alert-info"></i>authorize</a>
               </li>
+              <li><a href="#grant"><i class="alert alert-info"></i>grant</a>
+              </li>
             </ul>
           </div>
         </div>
@@ -163,6 +167,9 @@
   this.protocol = settings.protocol || 'http';
   this.base_url = this.protocol + '://api.jamendo.com/' + (settings.version ? settings.version : 'v3.0');
   this.client_id = settings.client_id;
+  this.client_secret = settings.client_secret;
+  this.rejectUnauthorized = settings.rejectUnauthorized || false;
+
 
   this.retry = settings.retry || false;
 };
@@ -301,12 +308,14 @@ module.exports = Jamendo;</code></pre>
   var r = request({
     url: this.base_url + path,
     method: 'GET',
+    rejectUnauthorized: this.rejectUnauthorized,
     qs: parameters,
     json: true
   }, function(error, response, body){
+
     if (error && !response && self.retry) {
       if (self.debug) {
-        console.log('network error, retry');
+        console.log('network error, retry', error);
       }
       return self.request(path, parameters, callback);
     }
@@ -349,12 +358,13 @@ module.exports = Jamendo;</code></pre>
   var r = request({
     url: this.base_url + path,
     method: 'POST',
+    rejectUnauthorized: this.rejectUnauthorized,
     form: parameters,
     json: true
   }, function(error, response, body){
     if (error && !response && self.retry) {
       if (self.debug) {
-        console.log('network error, retry');
+        console.log('network error, retry', error);
       }
       return self.write_request(path, parameters, callback);
     }
@@ -372,8 +382,6 @@ module.exports = Jamendo;</code></pre>
       callback(response.headers.code, response.headers.error_message, response.headers.warnings);
 
     }
-
-    callback(error, body);
   });
 
   return r;
@@ -999,7 +1007,7 @@ module.exports = Jamendo;</code></pre>
               <tr>
                 <td>parameters</td>
                 <td>Object</td>
-                <td>A query string object ( access_token, track_id are required )</td>
+                <td>A query string object ( access_token, artist_id are required )</td>
               </tr>
             </tbody>
           </table>
@@ -1100,20 +1108,6 @@ module.exports = Jamendo;</code></pre>
   return this.write_request('/setuser/dislike', parameters, callback);
 };</code></pre>
           </div>
-          <section id="authorize">
-            <h1>authorize</h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.authorize()</span>
-            </p>
-          </section>
-          <div class="description"><hr /> 
-            <pre><code class="language-javascript">Jamendo.prototype.authorize = function(parameters, callback) {
-  parameters = parameters || {};
-  parameters.client_id = this.client_id;
-
-  var self = this;</code></pre>
-          </div>
           <section>
             <h1></h1>
             <h5 class="subheader"></h5>
@@ -1121,24 +1115,121 @@ module.exports = Jamendo;</code></pre>
               <div class="label label-success radius ctx-type"></div>
             </p>
           </section>
-          <div class="description"><p>WORKFLOW<br />  => <a href='https://www.jamendo.com/en/login/oauth'>https://www.jamendo.com/en/login/oauth</a><br />  => <a href='https://api.jamendo.com/v3.0/oauth/authorize'>https://api.jamendo.com/v3.0/oauth/authorize</a><br />  => <a href='https://www.jamendo.com/en/login/oauthorizationform'>https://www.jamendo.com/en/login/oauthorizationform</a><br />  => <a href='http://api.jamendo.com/v3.0/oauth/submitoauthorizationform'>http://api.jamendo.com/v3.0/oauth/submitoauthorizationform</a></p>
+          <div class="description"><hr /> 
+            <pre><code class="language-javascript"></code></pre>
+          </div>
+          <section id="authorize">
+            <h1>authorize</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.authorize()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Authorize request wrapper</p>
 
-<p>=> get the redirect uri, it contains the AUTHORIZATION_CODE</p> 
-            <pre><code class="language-javascript">// send authorize request
+<p>The objective of such a request is to ask the user if he agrees to grant some rights to your application.</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.authorize = function(parameters, callback) {
+  parameters = parameters || {};
+  parameters.client_id = this.client_id;
+
+  var self = this;
+
+  // send authorize request
   var r = request({
     url: this.base_url + '/oauth/authorize',
     method: 'GET',
+    rejectUnauthorized: this.rejectUnauthorized,
     qs: parameters
   }, function(error, response, body){
     if (error && !response && self.retry) {
       if (self.debug) {
-        console.log('network error, retry');
+        console.log('network error, retry', error);
       }
-      return self.authorize();
+      return self.authorize(parameters, callback);
     }
 
-    // send the login url
+    // forward the login url
     callback(null, response.request.href);
+  });
+
+  return r;
+};</code></pre>
+          </div>
+          <section id="grant">
+            <h1>grant</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>Jamendo.prototype.grant()</span> -> <span>Request</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>parameters</td>
+                <td>Object</td>
+                <td>A query string object (code is required)</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Grant request wrapper</p>
+
+<p>The main objective of the OAuth2 Grant request is to exchange the authorization code you have received with the OAuth2 Authorize request to get an 'access token'.</p> 
+            <pre><code class="language-javascript">Jamendo.prototype.grant = function(parameters, callback) {
+  parameters = parameters || {};
+  parameters.client_id = this.client_id;
+  parameters.client_secret = this.client_secret;
+  parameters.grant_type = 'authorization_code';
+
+  if (!parameters.client_secret) {
+    return callback('You must provide a client_secret to the constructor', null);
+  }
+
+  if (!parameters.code) {
+    return callback('You must provide a code in parameters', null);
+  }
+
+  var self = this;
+  
+  // send authorize request
+  var r = request({
+    url: this.base_url + '/oauth/grant',
+    method: 'POST',
+    rejectUnauthorized: this.rejectUnauthorized,
+    form: parameters,
+    json: true
+  }, function(error, response, body){
+    if (error && !response && self.retry) {
+      if (self.debug) {
+        console.log('network error, retry', error);
+      }
+      return self.grant(parameters, callback);
+    }
+
+    // forward oauth detail
+    callback(null, body);
   });
 
   return r;
