@@ -108,14 +108,14 @@ You can set following options in the ```settings``` parameter
 ```javascript
 var jamendo = new Jamendo({
   client_id : 'no default',     // Specify your client_id
-                               // see http://developer.jamendo.com/v3.0#obtain_client_id
-  protocol  : 'http',         // HTTP protocol to use, http or https
-  version   : 'v3.0',        // Use the specified API version
+                                // see http://developer.jamendo.com/v3.0#obtain_client_id
+  protocol  : 'http',           // HTTP protocol to use, http or https
+  version   : 'v3.0',           // Use the specified API version
 
-  debug     : false         // Print the whole response object and body in the console
+  debug     : false             // Print the whole response object and body in the console
 
-  rejectUnauthorized:     // Ignore SSL certificates issues
-                         // see TLS options http://nodejs.org/docs/v0.7.8/api/https.html
+  rejectUnauthorized: false     // Ignore SSL certificates issues
+                                // see TLS options http://nodejs.org/docs/v0.7.8/api/https.html
 });
 ```
 
