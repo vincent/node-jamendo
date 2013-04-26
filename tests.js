@@ -39,6 +39,17 @@ jamendo.tracks({ id: 245 }, function(error, data){
 
 });
 
+// test tracks MP3 file redirection
+jamendo.tracks_file({ id: 245 }, function(error, mp3_data){
+
+  assert(mp3_data.length > 0);
+  assert(mp3_data.substr(0, 3) === 'ID3');
+
+});
+
+// test tracks MP3 file redirection, with pipes
+jamendo.tracks_file({ id: 245 }).pipe(fs.createWriteStream('245.mp3'));
+
 // test albums method
 jamendo.albums({ id: 33 }, function(error, data){
 
@@ -49,6 +60,15 @@ jamendo.albums({ id: 33 }, function(error, data){
   assert(data.results[0].artist_id === '5');
   assert(data.results[0].artist_name === 'Both');
   assert(data.results[0].name === 'Simple Exercice');
+
+});
+
+// test album MP3 file redirection
+jamendo.albums_file({ id: 33, audioformat: 'mp32' }, function(error, zip_data){
+
+  assert(typeof zip_data !== 'undefined');
+  assert(zip_data.length > 0);
+  assert(zip_data.substr(0, 2) === 'PK');
 
 });
 

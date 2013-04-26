@@ -121,7 +121,9 @@ Jamendo.prototype.request = function(path, parameters, callback) {
       return self.request(path, parameters, callback);
     }
 
-    callback(error, body);
+    if (typeof callback === 'function') {
+      callback(error, body);
+    }
   });
 
   return r;
@@ -154,50 +156,24 @@ Jamendo.prototype.write_request = function(path, parameters, callback) {
       return self.write_request(path, parameters, callback);
     }
 
-    // http error
-    if (error || !response) {
-      callback(error, 'network error', null);
+    if (typeof callback === 'function') {
+      // http error
+      if (error || !response) {
+        callback(error, 'network error', null);
 
-    // api error
-    } else if (parseInt(response.headers.status, 0) !== 0) {
-      callback(response.headers.code, response.headers.error_message, response.headers.warnings);
+      // api error
+      } else if (parseInt(response.headers.status, 0) !== 0) {
+        callback(response.headers.code, response.headers.error_message, response.headers.warnings);
 
-    // api success ! /me eyebrow
-    } else {
-      callback(response.headers.code, response.headers.error_message, response.headers.warnings);
+      // api success ! /me eyebrow
+      } else {
+        callback(response.headers.code, response.headers.error_message, response.headers.warnings);
 
+      }
     }
   });
 
   return r;
-};
-
-
-/**
-* Wrapper to the /albums endpoint
-*
-* @see http://developer.jamendo.com/v3.0/albums
-* @param {Object} parameters A query string object
-* @param {Function} callback The request callback(error, response_body)
-* @return {Request} The request object
-*/
-Jamendo.prototype.albums = function(parameters, callback) {
-  return this.request('/albums', parameters, callback);
-};
-
-// albums/file
-// albums/musicinfo
-
-/**
-* Wrapper to the /artists endpoint
-*
-* @see http://developer.jamendo.com/v3.0/artists
-* @param {Object} parameters A query string object
-* @param {Function} callback The request callback(error, response_body)
-* @return {Request} The request object
-*/
-Jamendo.prototype.artists = function(parameters, callback) {
-  return this.request('/artists', parameters, callback);
 };
 
 /**
@@ -212,18 +188,76 @@ Jamendo.prototype.tracks = function(parameters, callback) {
   return this.request('/tracks', parameters, callback);
 };
 
-// /tracks/file
+/**
+* Wrapper to the /tracks/file endpoint
+*
+* @see http://developer.jamendo.com/v3.0/tracks/file
+* @param {Object} parameters A query string object
+* @param {Function} callback The request callback(error, response_body)
+* @return {Request} The request object
+*/
+Jamendo.prototype.tracks_file = function(parameters, callback) {
+  return this.request('/tracks/file', parameters, callback);
+};
+
+/**
+* Wrapper to the /albums endpoint
+*
+* @see http://developer.jamendo.com/v3.0/albums
+* @param {Object} parameters A query string object
+* @param {Function} callback The request callback(error, response_body)
+* @return {Request} The request object
+*/
+Jamendo.prototype.albums = function(parameters, callback) {
+  return this.request('/albums', parameters, callback);
+};
 
 /**
 * Wrapper to the /album/tracks endpoint
 *
-* @see http://developer.jamendo.com/v3.0/album_tracks
+* @see http://developer.jamendo.com/v3.0/album/tracks
 * @param {Object} parameters A query string object
 * @param {Function} callback The request callback(error, response_body)
 * @return {Request} The request object
 */
 Jamendo.prototype.album_tracks = function(parameters, callback) {
   return this.request('/album/tracks', parameters, callback);
+};
+
+/**
+* Wrapper to the /albums/file endpoint
+*
+* @see http://developer.jamendo.com/v3.0/albums/file
+* @param {Object} parameters A query string object
+* @param {Function} callback The request callback(error, response_body)
+* @return {Request} The request object
+*/
+Jamendo.prototype.albums_file = function(parameters, callback) {
+  return this.request('/albums/file', parameters, callback);
+};
+
+/**
+* Wrapper to the /albums/musicinfo endpoint
+*
+* @see http://developer.jamendo.com/v3.0/albums/musicinfo
+* @param {Object} parameters A query string object
+* @param {Function} callback The request callback(error, response_body)
+* @return {Request} The request object
+*/
+Jamendo.prototype.albums_musicinfo = function(parameters, callback) {
+  return this.request('/albums/musicinfo', parameters, callback);
+};
+
+/**
+* Wrapper to the /artists endpoint
+*
+* @see http://developer.jamendo.com/v3.0/artists
+* @param {Object} parameters A query string object
+* @param {Function} callback The request callback(error, response_body)
+* @return {Request} The request object
+*/
+Jamendo.prototype.artists = function(parameters, callback) {
+  return this.request('/artists', parameters, callback);
 };
 
 /**
@@ -250,8 +284,29 @@ Jamendo.prototype.artist_tracks = function(parameters, callback) {
   return this.request('/artist/tracks', parameters, callback);
 };
 
-// /artists/locations
-// /artists/musicinfo
+/**
+* Wrapper to the /artists/musicinfo endpoint
+*
+* @see http://developer.jamendo.com/v3.0/artists/musicinfo
+* @param {Object} parameters A query string object
+* @param {Function} callback The request callback(error, response_body)
+* @return {Request} The request object
+*/
+Jamendo.prototype.artists_musicinfo = function(parameters, callback) {
+  return this.request('/artists/musicinfo', parameters, callback);
+};
+
+/**
+* Wrapper to the /artists/locations endpoint
+*
+* @see http://developer.jamendo.com/v3.0/artists/locations
+* @param {Object} parameters A query string object
+* @param {Function} callback The request callback(error, response_body)
+* @return {Request} The request object
+*/
+Jamendo.prototype.artists_locations = function(parameters, callback) {
+  return this.request('/artists/locations', parameters, callback);
+};
 
 /**
 * Wrapper to the /concerts endpoint
@@ -289,7 +344,17 @@ Jamendo.prototype.playlists_tracks = function(parameters, callback) {
   return this.request('/playlists/tracks', parameters, callback);
 };
 
-// /playlists/file
+/**
+* Wrapper to the /playlists/file endpoint
+*
+* @see http://developer.jamendo.com/v3.0/playlists/file
+* @param {Object} parameters A query string object
+* @param {Function} callback The request callback(error, response_body)
+* @return {Request} The request object
+*/
+Jamendo.prototype.playlists_file = function(parameters, callback) {
+  return this.request('/playlists/file', parameters, callback);
+};
 
 /**
 * Wrapper to the /reviews endpoint
@@ -438,9 +503,7 @@ Jamendo.prototype.autocomplete = function(parameters, callback) {
   return this.request('/autocomplete', parameters, callback);
 };
 
-
 /********************************************/
-
 
 /**
 * Wrapper to the /setuser/fan endpoint
@@ -501,7 +564,6 @@ Jamendo.prototype.setuser_like = function(parameters, callback) {
 Jamendo.prototype.setuser_dislike = function(parameters, callback) {
   return this.write_request('/setuser/dislike', parameters, callback);
 };
-
 
 /******************************************/
 
