@@ -185,6 +185,9 @@ Jamendo.prototype.albums = function(parameters, callback) {
   return this.request('/albums', parameters, callback);
 };
 
+// albums/file
+// albums/musicinfo
+
 /**
 * Wrapper to the /artists endpoint
 *
@@ -208,6 +211,8 @@ Jamendo.prototype.artists = function(parameters, callback) {
 Jamendo.prototype.tracks = function(parameters, callback) {
   return this.request('/tracks', parameters, callback);
 };
+
+// /tracks/file
 
 /**
 * Wrapper to the /album/tracks endpoint
@@ -245,6 +250,9 @@ Jamendo.prototype.artist_tracks = function(parameters, callback) {
   return this.request('/artist/tracks', parameters, callback);
 };
 
+// /artists/locations
+// /artists/musicinfo
+
 /**
 * Wrapper to the /concerts endpoint
 *
@@ -280,6 +288,8 @@ Jamendo.prototype.playlists = function(parameters, callback) {
 Jamendo.prototype.playlists_tracks = function(parameters, callback) {
   return this.request('/playlists/tracks', parameters, callback);
 };
+
+// /playlists/file
 
 /**
 * Wrapper to the /reviews endpoint

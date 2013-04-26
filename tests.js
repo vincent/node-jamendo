@@ -63,6 +63,17 @@ jamendo.artists({ id: 5 }, function(error, data){
 
 });
 
+/* // TODO
+album_tracks
+artist_albums
+artist_tracks
+playlists
+playlists_tracks
+reviews
+reviews_albums
+radios
+*/
+
 // test users_favorites_artists method
 jamendo.users_favorites_artists({ id: 257235 }, function(error, data){
 
