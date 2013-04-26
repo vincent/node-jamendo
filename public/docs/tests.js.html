@@ -58,94 +58,25 @@
         <div class="span3 bs-docs-sidebar">
           <ul class="nav nav-list bs-docs-sidenav affix-top">
             <li class=""><a href="index.html">Main</a></li>
-            <li class=""><a href=".client_id.js.html">.client_id.js</a></li>
-            <li class=""><a href=".client_secret.js.html">.client_secret.js</a></li>
             <li class=""><a href="Gruntfile.js.html">Gruntfile.js</a></li>
             <li class=""><a href="index.js.html">index.js</a></li>
             <li class="active"><a href="tests.js.html">tests.js</a></li>
           </ul>
           <div class="scrollspy">
             <ul class="nav nav-list bs-docs-sidenav affix-top">
-              <li><a href="#util"><i class="alert alert-success"></i>util</a>
-              </li>
             </ul>
           </div>
         </div>
         <div class="span9">
-          <section id="util">
-            <h1>util</h1>
+          <section>
+            <h1></h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-success radius ctx-type">declaration</div><span>util</span>
+              <div class="label label-success radius ctx-type"></div>
             </p>
           </section>
-          <div class="description"> 
-            <pre><code class="language-javascript">var util = require('util'),
-  fs = require('fs'),
-  sys = require('util'),
-  Jamendo = require('./index.js'),
-  assert = require('assert');
-
-function load_or(filename, defaults) {
-  try { return require(filename); } catch (e) { return defaults; }
-}
-
-// try to load my own credentials
-var client_id = load_or('./.client_id.js', 'b6747d04');
-var client_secret = load_or('./.client_secret.js', null);
-
-console.log('using API client_id:', client_id);
-console.log('using API client_secret:', client_secret);
-
-// get an API client
-var jamendo = new Jamendo({
-  debug: true,
-  retry: true,
-  protocol: 'https',
-  client_id: client_id,
-  client_secret: client_secret,
-  rejectUnauthorized: false
-});
-
-// test tracks method
-jamendo.tracks({ id: 245 }, function(error, data){
-
-  assert(typeof data.results !== 'undefined');
-  assert(data.results.length === 1);
-
-  assert(data.results[0].id === '245');
-  assert(data.results[0].artist_id === '5');
-  assert(data.results[0].album_id === '33');
-  assert(data.results[0].artist_name === 'Both');
-  assert(data.results[0].album_name === 'Simple Exercice');
-
-});
-
-// test albums method
-jamendo.albums({ id: 33 }, function(error, data){
-
-  assert(typeof data.results !== 'undefined');
-  assert(data.results.length === 1);
-
-  assert(data.results[0].id === '33');
-  assert(data.results[0].artist_id === '5');
-  assert(data.results[0].artist_name === 'Both');
-  assert(data.results[0].name === 'Simple Exercice');
-
-});
-
-// test artists method
-jamendo.artists({ id: 5 }, function(error, data){
-
-  assert(typeof data.results !== 'undefined');
-  assert(data.results.length === 1);
-
-  assert(data.results[0].id === '5');
-  assert(data.results[0].name === 'Both');
-
-});
-
-// test users_favorites_artists method
+          <div class="description"><p>// TODO<br />album_tracks<br />artist_albums<br />artist_tracks<br />playlists<br />playlists_tracks<br />reviews<br />reviews_albums<br />radios</p> 
+            <pre><code class="language-javascript">// test users_favorites_artists method
 jamendo.users_favorites_artists({ id: 257235 }, function(error, data){
 
   assert(data.results !== 'undefined');

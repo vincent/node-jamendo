@@ -58,8 +58,6 @@
         <div class="span3 bs-docs-sidebar">
           <ul class="nav nav-list bs-docs-sidenav affix-top">
             <li class=""><a href="index.html">Main</a></li>
-            <li class=""><a href=".client_id.js.html">.client_id.js</a></li>
-            <li class=""><a href=".client_secret.js.html">.client_secret.js</a></li>
             <li class=""><a href="Gruntfile.js.html">Gruntfile.js</a></li>
             <li class="active"><a href="index.js.html">index.js</a></li>
             <li class=""><a href="tests.js.html">tests.js</a></li>
@@ -413,7 +411,10 @@ module.exports = Jamendo;</code></pre>
           <div class="description"><p>Wrapper to the /albums endpoint</p> 
             <pre><code class="language-javascript">Jamendo.prototype.albums = function(parameters, callback) {
   return this.request('/albums', parameters, callback);
-};</code></pre>
+};
+
+// albums/file
+// albums/musicinfo</code></pre>
           </div>
           <section id="artists">
             <h1>artists</h1>
@@ -469,7 +470,9 @@ module.exports = Jamendo;</code></pre>
           <div class="description"><p>Wrapper to the /tracks endpoint</p> 
             <pre><code class="language-javascript">Jamendo.prototype.tracks = function(parameters, callback) {
   return this.request('/tracks', parameters, callback);
-};</code></pre>
+};
+
+// /tracks/file</code></pre>
           </div>
           <section id="album_tracks">
             <h1>album_tracks</h1>
@@ -553,7 +556,10 @@ module.exports = Jamendo;</code></pre>
           <div class="description"><p>Wrapper to the /artist/tracks endpoint</p> 
             <pre><code class="language-javascript">Jamendo.prototype.artist_tracks = function(parameters, callback) {
   return this.request('/artist/tracks', parameters, callback);
-};</code></pre>
+};
+
+// /artists/locations
+// /artists/musicinfo</code></pre>
           </div>
           <section id="concerts">
             <h1>concerts</h1>
@@ -637,7 +643,9 @@ module.exports = Jamendo;</code></pre>
           <div class="description"><p>Wrapper to the /playlists/tracks endpoint</p> 
             <pre><code class="language-javascript">Jamendo.prototype.playlists_tracks = function(parameters, callback) {
   return this.request('/playlists/tracks', parameters, callback);
-};</code></pre>
+};
+
+// /playlists/file</code></pre>
           </div>
           <section id="reviews">
             <h1>reviews</h1>
