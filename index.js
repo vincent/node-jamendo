@@ -3,8 +3,8 @@ var util = require('util');
 
 /**
 * Jamendo API client class
-* Use it with 
-* var client = new Jamendo({ client_id: XXXXXX })
+* Use it with
+* var client = new Jamendo({ client_id: XXXXXX, client_secret: YYYYYYY })
 *
 * @param {Object} settings A settings object with a client_id member
 * @return object An instanciated Jamendo class
@@ -43,7 +43,7 @@ Jamendo.prototype.clean_params = function(path, object){
         limit     : 10,
         offset    : 0,
         format    : 'json',
-        client_id : this.client_id, 
+        client_id : this.client_id,
       };
 
   object = object || {};
@@ -57,7 +57,7 @@ Jamendo.prototype.clean_params = function(path, object){
 
   // datebetween params
   if (object.datebetween && util.isArray(object.datebetween) && object.datebetween.length === 2) {
-    
+
     for (var i = 0; i < 2; i++) {
       // perfect
       if (util.isDate(object.datebetween[i])) {
@@ -65,7 +65,7 @@ Jamendo.prototype.clean_params = function(path, object){
       // a timestamp (milliseconds)
       } else if (parseInt(object.datebetween[i], 0)) {
         object.datebetween[i] = new Date(object.datebetween[i]);
-      
+
       // an IETF-compliant RFC 2822 timestamps string
       } else {
         object.datebetween[i] = new Date(object.datebetween[i]);
@@ -627,7 +627,7 @@ Jamendo.prototype.grant = function(parameters, callback) {
   }
 
   var self = this;
-  
+
   // send authorize request
   var r = request({
     url: this.base_url + '/oauth/grant',

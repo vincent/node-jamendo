@@ -31,7 +31,7 @@ jamendo.albums({ id: 33 }, function(error, data){
 }
 ```
 
-As the methods return a ```request``` object, they are streamable.
+As methods return a ```request``` object, they are streamable.
 ```javascript
 // write the track #245 in mp3 on disk
 jamendo.tracks_file({ id: 245 }).pipe(fs.createWriteStream('Both - J.E.T. Apostrophe A.I.M.E.mp3'));

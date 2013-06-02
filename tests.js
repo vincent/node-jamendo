@@ -143,7 +143,7 @@ jamendo.tracks({ datebetween: [ new Date('1984-04-04'), new Date('2011-10-10') ]
 
 });
 
-// test authorize 
+// test authorize
 var test_redirect_uri = 'http://localhost/DAT_CODE';
 jamendo.authorize({ redirect_uri: test_redirect_uri }, function(error, login_url){
 
@@ -161,7 +161,7 @@ jamendo.authorize({ redirect_uri: test_redirect_uri }, function(error, login_url
   // much better !
   } else {
 
-    // get granted 
+    // get granted
     jamendo.grant({ redirect_uri: test_redirect_uri, code: authorization_code }, function(error, oauth_data){
 
       assert(typeof oauth_data !== 'undefined', 'Cannot get oauth data, verify your credentials');
