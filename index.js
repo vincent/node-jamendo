@@ -221,7 +221,7 @@ Jamendo.prototype.albums = function(parameters, callback) {
 * @return {Request} The request object
 */
 Jamendo.prototype.album_tracks = function(parameters, callback) {
-  return this.request('/album/tracks', parameters, callback);
+  return this.request('/albums/tracks', parameters, callback);
 };
 
 /**
@@ -269,7 +269,7 @@ Jamendo.prototype.artists = function(parameters, callback) {
 * @return {Request} The request object
 */
 Jamendo.prototype.artist_albums = function(parameters, callback) {
-  return this.request('/artist/albums', parameters, callback);
+  return this.request('/artists/albums', parameters, callback);
 };
 
 /**
@@ -281,7 +281,7 @@ Jamendo.prototype.artist_albums = function(parameters, callback) {
 * @return {Request} The request object
 */
 Jamendo.prototype.artist_tracks = function(parameters, callback) {
-  return this.request('/artist/tracks', parameters, callback);
+  return this.request('/artists/tracks', parameters, callback);
 };
 
 /**
