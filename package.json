@@ -16,7 +16,7 @@
   "author": "Vincent Lark vincent.lark@gmail.com",
   "license": "BSD",
   "dependencies": {
-    "request": "~2.20.0"
+    "request": "~2.22.0"
   },
   "devDependencies": {
     "coffee-script": "*",
