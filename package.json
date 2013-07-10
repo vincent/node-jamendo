@@ -21,8 +21,8 @@
   "devDependencies": {
     "coffee-script": "*",
     "grunt": ">= 0.4.0",
-    "grunt-contrib-jshint": "~0.4.3",
-    "grunt-shell": "~0.2.2"
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-shell": "~0.3.0"
   },
   "readmeFilename": "Readme.md",
   "gitHead": "abe2a2e6a09763bd95d627bd2ade8a50a3ecb7df"
