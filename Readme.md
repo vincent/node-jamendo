@@ -6,7 +6,7 @@ It only makes HTTP requests with the well known [request](https://github.com/mik
 All methods described at http://developer.jamendo.com/v3.0 are supported.
 
 [![Dependencies](https://david-dm.org/vincent/node-jamendo.png)](https://david-dm.org/vincent/node-jamendo)
-
+[![NPM version](https://badge.fury.io/js/jamendo.png)](http://badge.fury.io/js/jamendo)
 
 # Install
 ```bash
