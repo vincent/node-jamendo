@@ -11,14 +11,14 @@
     "url": "git://github.com/vincent/node-jamendo.git"
   },
   "keywords": [
-    "jamendo"
+    "jamendo, api"
   ],
   "author": "Vincent Lark vincent.lark@gmail.com",
   "license": "BSD",
   "dependencies": {
+    "request": ">= 2.20.0"
   },
   "devDependencies": {
-    "request": ">= 2.20.0",
     "coffee-script": "*",
     "grunt": ">= 0.4.0",
     "grunt-contrib-jshint": "~0.6.0",
