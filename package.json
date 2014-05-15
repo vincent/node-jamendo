@@ -1,6 +1,6 @@
 {
   "name": "jamendo",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A simple wrapper to Jamendo API v3",
   "main": "index.js",
   "scripts": {

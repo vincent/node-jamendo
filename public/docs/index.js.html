@@ -167,7 +167,7 @@
               </tr>
             </tbody>
           </table>
-          <div class="description"><p>Jamendo API client class<br />Use it with <br />var client = new Jamendo({ client_id: XXXXXX })</p> 
+          <div class="description"><p>Jamendo API client class<br />Use it with<br />var client = new Jamendo({ client_id: XXXXXX, client_secret: YYYYYYY })</p> 
             <pre><code class="language-javascript">var Jamendo = function(settings) {
   if (!settings || !settings.client_id) {
     throw 'You must provide a client_id setting';
@@ -216,7 +216,7 @@ module.exports = Jamendo;</code></pre>
         limit     : 10,
         offset    : 0,
         format    : 'json',
-        client_id : this.client_id, 
+        client_id : this.client_id,
       };
 
   object = object || {};
@@ -230,7 +230,7 @@ module.exports = Jamendo;</code></pre>
 
   // datebetween params
   if (object.datebetween && util.isArray(object.datebetween) && object.datebetween.length === 2) {
-    
+
     for (var i = 0; i < 2; i++) {
       // perfect
       if (util.isDate(object.datebetween[i])) {
@@ -238,7 +238,7 @@ module.exports = Jamendo;</code></pre>
       // a timestamp (milliseconds)
       } else if (parseInt(object.datebetween[i], 0)) {
         object.datebetween[i] = new Date(object.datebetween[i]);
-      
+
       // an IETF-compliant RFC 2822 timestamps string
       } else {
         object.datebetween[i] = new Date(object.datebetween[i]);
@@ -510,7 +510,7 @@ module.exports = Jamendo;</code></pre>
           </table>
           <div class="description"><p>Wrapper to the /album/tracks endpoint</p> 
             <pre><code class="language-javascript">Jamendo.prototype.album_tracks = function(parameters, callback) {
-  return this.request('/album/tracks', parameters, callback);
+  return this.request('/albums/tracks', parameters, callback);
 };</code></pre>
           </div>
           <section id="albums_file">
@@ -622,7 +622,7 @@ module.exports = Jamendo;</code></pre>
           </table>
           <div class="description"><p>Wrapper to the /artist/albums endpoint</p> 
             <pre><code class="language-javascript">Jamendo.prototype.artist_albums = function(parameters, callback) {
-  return this.request('/artist/albums', parameters, callback);
+  return this.request('/artists/albums', parameters, callback);
 };</code></pre>
           </div>
           <section id="artist_tracks">
@@ -650,7 +650,7 @@ module.exports = Jamendo;</code></pre>
           </table>
           <div class="description"><p>Wrapper to the /artist/tracks endpoint</p> 
             <pre><code class="language-javascript">Jamendo.prototype.artist_tracks = function(parameters, callback) {
-  return this.request('/artist/tracks', parameters, callback);
+  return this.request('/artists/tracks', parameters, callback);
 };</code></pre>
           </div>
           <section id="artists_musicinfo">
@@ -1394,7 +1394,7 @@ module.exports = Jamendo;</code></pre>
   }
 
   var self = this;
-  
+
   // send authorize request
   var r = request({
     url: this.base_url + '/oauth/grant',
