@@ -5,3 +5,4 @@ sandbox.js
 *.mp3
 *.ogg
 npm-debug.log
+/nbproject
