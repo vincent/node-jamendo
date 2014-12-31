@@ -9,7 +9,7 @@ function load_or(filename, defaults) {
 }
 
 // try to load my own credentials
-var client_id = load_or('./.client_id.js', 'b6747d04');
+var client_id = load_or('./.client_id.js', 'f919df7d');
 var client_secret = load_or('./.client_secret.js', null);
 
 console.log('using API client_id:', client_id);
