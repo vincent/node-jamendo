@@ -19,7 +19,6 @@
     "request": ">= 2.51.0"
   },
   "devDependencies": {
-    "coffee-script": "*",
     "grunt": ">= 0.4.5",
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-shell": "~1.1.1"

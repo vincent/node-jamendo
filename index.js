@@ -43,7 +43,7 @@ Jamendo.prototype.clean_params = function(path, object){
         limit     : 10,
         offset    : 0,
         format    : 'json',
-        client_id : this.client_id,
+        client_id : this.client_id
       };
 
   object = object || {};

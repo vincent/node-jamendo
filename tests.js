@@ -25,63 +25,65 @@ var jamendo = new Jamendo({
   rejectUnauthorized: false
 });
 
-// test tracks method
-jamendo.tracks({ id: 245 }, function(error, data){
+var tests = [
 
-  assert(typeof data.results !== 'undefined');
-  assert(data.results.length === 1);
+  // test tracks method
+  jamendo.tracks({ id: 245 }, function(error, data){
 
-  assert(data.results[0].id === '245');
-  assert(data.results[0].artist_id === '5');
-  assert(data.results[0].album_id === '33');
-  assert(data.results[0].artist_name === 'Both');
-  assert(data.results[0].album_name === 'Simple Exercice');
+    assert(typeof data.results !== 'undefined');
+    assert(data.results.length === 1);
 
-});
+    assert(data.results[0].id === '245');
+    assert(data.results[0].artist_id === '5');
+    assert(data.results[0].album_id === '33');
+    assert(data.results[0].artist_name === 'Both');
+    assert(data.results[0].album_name === 'Simple Exercice');
 
-// test tracks MP3 file redirection
-jamendo.tracks_file({ id: 245 }, function(error, mp3_data){
+  }),
 
-  assert(mp3_data.length > 0);
-  assert(mp3_data.substr(0, 3) === 'ID3');
+  // test tracks MP3 file redirection
+  jamendo.tracks_file({ id: 245 }, function(error, mp3_data){
 
-});
+    assert(mp3_data.length > 0);
+    assert(mp3_data.substr(0, 3) === 'ID3');
 
-// test tracks MP3 file redirection, with pipes
-jamendo.tracks_file({ id: 245 }).pipe(fs.createWriteStream('245.mp3'));
+  }),
 
-// test albums method
-jamendo.albums({ id: 33 }, function(error, data){
+  // test tracks MP3 file redirection, with pipes
+  jamendo.tracks_file({ id: 245 }).pipe(fs.createWriteStream('245.mp3')),
 
-  assert(typeof data.results !== 'undefined');
-  assert(data.results.length === 1);
+  // test albums method
+  jamendo.albums({ id: 33 }, function(error, data){
 
-  assert(data.results[0].id === '33');
-  assert(data.results[0].artist_id === '5');
-  assert(data.results[0].artist_name === 'Both');
-  assert(data.results[0].name === 'Simple Exercice');
+    assert(typeof data.results !== 'undefined');
+    assert(data.results.length === 1);
 
-});
+    assert(data.results[0].id === '33');
+    assert(data.results[0].artist_id === '5');
+    assert(data.results[0].artist_name === 'Both');
+    assert(data.results[0].name === 'Simple Exercice');
 
-// test album MP3 file redirection
-jamendo.albums_file({ id: 33, audioformat: 'mp32' }, function(error, zip_data){
+  }),
 
-  assert(typeof zip_data !== 'undefined');
-  assert(zip_data.length > 0);
-  assert(zip_data.substr(0, 2) === 'PK');
+  // test album MP3 file redirection
+  jamendo.albums_file({ id: 33, audioformat: 'mp32' }, function(error, zip_data){
 
-});
+    assert(typeof zip_data !== 'undefined');
+    assert(zip_data.length > 0);
+    assert(zip_data.substr(0, 2) === 'PK');
 
-// test artists method
-jamendo.artists({ id: 5 }, function(error, data){
+  }),
 
-  assert(typeof data.results !== 'undefined');
-  assert(data.results.length === 1);
+  // test artists method
+  jamendo.artists({ id: 5 }, function(error, data){
 
-  assert(data.results[0].id === '5');
-  assert(data.results[0].name === 'Both');
+    assert(typeof data.results !== 'undefined');
+    assert(data.results.length === 1);
 
-});
+    assert(data.results[0].id === '5');
+    assert(data.results[0].name === 'Both');
+
+  }),
 
 /* // TODO
 album_tracks
@@ -94,57 +96,66 @@ reviews_albums
 radios
 */
 
-// test users_favorites_artists method
-jamendo.users_favorites_artists({ id: 257235 }, function(error, data){
+  // test users_favorites_artists method
+  jamendo.users_favorites_artists({ id: 257235 }, function(error, data){
 
-  assert(data.results !== 'undefined');
-  assert(data.results.length === 1);
-  assert(data.results[0].artists.length > 1);
+    assert(data.results !== 'undefined');
+    assert(data.results.length === 1);
+    assert(data.results[0].artists.length > 1);
 
-});
+  }),
 
-// test concerts method
-jamendo.concerts({ }, function(error, data){
+  // test concerts method
+  jamendo.concerts({ }, function(error, data){
 
-  assert(typeof data.results !== 'undefined');
-  assert(data.results.length === 10);
+    assert(typeof data.results !== 'undefined');
+    assert(data.results.length === 10);
 
-});
+  }),
 
-// test array params
-jamendo.artists({ id: [ 5, 888 ] }, function(error, data){
+  // test array params
+  jamendo.artists({ id: [ 5, 888 ] }, function(error, data){
 
-  assert(typeof data.results !== 'undefined');
-  assert(data.results.length === 2);
+    assert(typeof data.results !== 'undefined');
+    assert(data.results.length === 2);
 
-});
+  }),
 
-// test default params
-jamendo.artists({ }, function(error, data){
+  // test default params
+  jamendo.artists({ }, function(error, data){
 
-  assert(typeof data.results !== 'undefined');
-  assert(data.results.length === 10);
+    assert(typeof data.results !== 'undefined');
+    assert(data.results.length === 10);
 
-});
+  }),
 
-// test datebetween params, as strings and timestamps
-jamendo.tracks({ datebetween: [ 449921044 * 1000, '2011-10-10' ], limit: 10 }, function(error, data){
+  // test datebetween params, as strings and timestamps
+  jamendo.tracks({ datebetween: [ 449921044 * 1000, '2011-10-10' ], limit: 10 }, function(error, data){
 
-  assert(typeof data.results !== 'undefined');
-  assert(data.results.length === 10);
+    assert(typeof data.results !== 'undefined');
+    assert(data.results.length === 10);
 
-});
+  }),
 
-// test datebetween params, as Date objects
-jamendo.tracks({ datebetween: [ new Date('1984-04-04'), new Date('2011-10-10') ], limit: 10 }, function(error, data){
+  // test datebetween params, as Date objects
+  jamendo.tracks({ datebetween: [ new Date('1984-04-04'), new Date('2011-10-10') ], limit: 10 }, function(error, data){
 
-  assert(typeof data.results !== 'undefined');
-  assert(data.results.length === 10);
+    assert(typeof data.results !== 'undefined');
+    assert(data.results.length === 10);
 
-});
+  })
+
+];
+
+for (var i = 0; i < tests.length; i++) {
+  
+  setTimeout(function(){ tests[i]; }, 1000);
+  
+}
 
 // test authorize
 var test_redirect_uri = 'http://localhost/DAT_CODE';
+
 jamendo.authorize({ redirect_uri: test_redirect_uri }, function(error, login_url){
 
   assert(typeof login_url !== 'undefined');
@@ -196,4 +207,3 @@ jamendo.authorize({ redirect_uri: test_redirect_uri }, function(error, login_url
 
   }
 });
-
