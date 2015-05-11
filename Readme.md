@@ -143,6 +143,3 @@ BSD
 # Contribute
 All comments, patchs and pull requests are welcome, but please ensure you ran ```grunt``` without warnings before creating a pull request.
 
-# Background
-Maintainer @vincent (me duh!) was a Jamendo developper for about 4 years and still have relationships with Jamendo staff.
-
